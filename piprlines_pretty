@@ -1,0 +1,2139 @@
+{
+  "host" : "afs-vm-eastus-elastic-az2-logst-p02",
+  "version" : "9.1.3",
+  "http_address" : "127.0.0.1:9600",
+  "id" : "816a5312-fdce-4519-9ac8-ef62280a07ab",
+  "name" : "afs-vm-eastus-elastic-az2-logst-p02",
+  "ephemeral_id" : "f3c3d407-fcb1-4500-8702-e27bee4558da",
+  "snapshot" : false,
+  "status" : "green",
+  "pipeline" : {
+    "workers" : 8,
+    "batch_size" : 125,
+    "batch_delay" : 50
+  },
+  "pipelines" : {
+    "snare-relay" : {
+      "events" : {
+        "queue_push_duration_in_millis" : 81339203,
+        "duration_in_millis" : 1404617542,
+        "out" : 213399086,
+        "filtered" : 213399086,
+        "in" : 213402767
+      },
+      "flow" : {
+        "output_throughput" : {
+          "current" : 815.4,
+          "last_1_minute" : 998.2,
+          "last_5_minutes" : 970.8,
+          "last_15_minutes" : 869.4,
+          "last_1_hour" : 916.9,
+          "last_24_hours" : 884.9,
+          "lifetime" : 764.0
+        },
+        "filter_throughput" : {
+          "current" : 815.4,
+          "last_1_minute" : 998.2,
+          "last_5_minutes" : 970.8,
+          "last_15_minutes" : 869.4,
+          "last_1_hour" : 916.9,
+          "last_24_hours" : 884.9,
+          "lifetime" : 764.0
+        },
+        "worker_concurrency" : {
+          "current" : 2.101,
+          "last_1_minute" : 2.483,
+          "last_5_minutes" : 4.687,
+          "last_15_minutes" : 5.084,
+          "last_1_hour" : 4.25,
+          "last_24_hours" : 5.1,
+          "lifetime" : 5.029
+        },
+        "worker_utilization" : {
+          "current" : 26.27,
+          "last_1_minute" : 31.04,
+          "last_5_minutes" : 58.58,
+          "last_15_minutes" : 63.55,
+          "last_1_hour" : 53.13,
+          "last_24_hours" : 63.75,
+          "lifetime" : 62.86
+        },
+        "queue_backpressure" : {
+          "current" : 0.004019,
+          "last_1_minute" : 0.003987,
+          "last_5_minutes" : 0.1769,
+          "last_15_minutes" : 0.2252,
+          "last_1_hour" : 0.06501,
+          "last_24_hours" : 0.2016,
+          "lifetime" : 0.2912
+        },
+        "input_throughput" : {
+          "current" : 932.8,
+          "last_1_minute" : 938.0,
+          "last_5_minutes" : 958.8,
+          "last_15_minutes" : 870.1,
+          "last_1_hour" : 917.3,
+          "last_24_hours" : 884.8,
+          "lifetime" : 764.0
+        }
+      },
+      "plugins" : {
+        "inputs" : [ {
+          "id" : "6ccf647d16e2915ecb486b9ab344de16c0422d75902d868e86f0eb71b19d8b5f",
+          "events" : {
+            "queue_push_duration_in_millis" : 81303491,
+            "out" : 213402767
+          },
+          "flow" : {
+            "throughput" : {
+              "current" : 933.0,
+              "last_1_minute" : 938.0,
+              "last_5_minutes" : 958.8,
+              "last_15_minutes" : 870.1,
+              "last_1_hour" : 917.3,
+              "last_24_hours" : 884.8,
+              "lifetime" : 764.0
+            }
+          },
+          "name" : "tcp"
+        } ],
+        "codecs" : [ {
+          "id" : "line_de4a3a57-d834-444f-8c77-1282bddbe4e7",
+          "encode" : {
+            "duration_in_millis" : 0,
+            "writes_in" : 0
+          },
+          "name" : "line",
+          "decode" : {
+            "duration_in_millis" : 83716040,
+            "out" : 213402766,
+            "writes_in" : 111290355
+          }
+        }, {
+          "id" : "rubydebug_835f48bc-ea8c-4d81-8f54-20d3084a47bb",
+          "encode" : {
+            "duration_in_millis" : 82036096,
+            "writes_in" : 213399086
+          },
+          "name" : "rubydebug",
+          "decode" : {
+            "duration_in_millis" : 0,
+            "out" : 0,
+            "writes_in" : 0
+          }
+        }, {
+          "id" : "plain_928e645e-4356-4dba-9038-d5c4854fbd07",
+          "encode" : {
+            "duration_in_millis" : 0,
+            "writes_in" : 0
+          },
+          "name" : "plain",
+          "decode" : {
+            "duration_in_millis" : 0,
+            "out" : 0,
+            "writes_in" : 0
+          }
+        } ],
+        "filters" : [ {
+          "id" : "2c46dfffd16090ca5ba8f0b09567cbee75d87dd9ff3e2a1df44bae66bf143143",
+          "events" : {
+            "duration_in_millis" : 27796,
+            "out" : 215066,
+            "in" : 215066
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.08696,
+              "last_1_minute" : 0.1148,
+              "last_5_minutes" : 0.1442,
+              "last_15_minutes" : 0.1257,
+              "last_1_hour" : 0.1206,
+              "last_24_hours" : 0.1256,
+              "lifetime" : 0.1292
+            },
+            "worker_utilization" : {
+              "current" : 0.002137,
+              "last_1_minute" : 0.001418,
+              "last_5_minutes" : 0.001915,
+              "last_15_minutes" : 0.001469,
+              "last_1_hour" : 0.001428,
+              "last_24_hours" : 0.00144,
+              "lifetime" : 0.001244
+            }
+          },
+          "name" : "grok",
+          "matches" : 215066,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "588fbde109eab21762fb2d0e57ef13888d7653154c56bb065fd2c534cc5398ce",
+          "events" : {
+            "duration_in_millis" : 265071,
+            "out" : 21587085,
+            "in" : 21587085
+          },
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.01401,
+              "last_1_minute" : 0.01229,
+              "last_5_minutes" : 0.01198,
+              "last_15_minutes" : 0.01167,
+              "last_1_hour" : 0.01179,
+              "last_24_hours" : 0.01217,
+              "lifetime" : 0.01228
+            },
+            "worker_utilization" : {
+              "current" : 0.04489,
+              "last_1_minute" : 0.02512,
+              "last_5_minutes" : 0.01927,
+              "last_15_minutes" : 0.0148,
+              "last_1_hour" : 0.01168,
+              "last_24_hours" : 0.01359,
+              "lifetime" : 0.01186
+            }
+          },
+          "name" : "ruby"
+        }, {
+          "id" : "30f21bff0028a4843eb9e1e85f3fd9d6c1e8f9cfcc35217006f8027ea31944ce",
+          "events" : {
+            "duration_in_millis" : 2266193,
+            "out" : 173282404,
+            "in" : 173282404
+          },
+          "failures" : 22,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.012,
+              "last_1_minute" : 0.01373,
+              "last_5_minutes" : 0.01491,
+              "last_15_minutes" : 0.01412,
+              "last_1_hour" : 0.01373,
+              "last_24_hours" : 0.01316,
+              "lifetime" : 0.01308
+            },
+            "worker_utilization" : {
+              "current" : 0.1069,
+              "last_1_minute" : 0.1323,
+              "last_5_minutes" : 0.1432,
+              "last_15_minutes" : 0.1231,
+              "last_1_hour" : 0.1315,
+              "last_24_hours" : 0.1188,
+              "lifetime" : 0.1014
+            }
+          },
+          "name" : "grok",
+          "matches" : 173282382,
+          "patterns_per_field" : {
+            "uid_kv" : 1
+          }
+        }, {
+          "id" : "ac9d759fa1894e98e01f3a51da9d36b1bfbfe5790a00c0ab16a52f3dd3746493",
+          "events" : {
+            "duration_in_millis" : 566633,
+            "out" : 12466,
+            "in" : 12466
+          },
+          "failures" : 12466,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_15_minutes" : 9.0,
+              "last_1_hour" : 12.08,
+              "last_24_hours" : 42.59,
+              "lifetime" : 45.45
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 0.0,
+              "last_15_minutes" : 2.495E-4,
+              "last_1_hour" : 0.008378,
+              "last_24_hours" : 0.02807,
+              "lifetime" : 0.02536
+            }
+          },
+          "name" : "grok",
+          "matches" : 0,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "efbef35150c665d15f5a01804ffc6d925f1a29d531b51b1dce6d92c43956e86e",
+          "events" : {
+            "duration_in_millis" : 2697493,
+            "out" : 150457401,
+            "in" : 150457401
+          },
+          "failures" : 109810,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.01623,
+              "last_1_minute" : 0.01775,
+              "last_5_minutes" : 0.01862,
+              "last_15_minutes" : 0.01833,
+              "last_1_hour" : 0.01853,
+              "last_24_hours" : 0.018,
+              "lifetime" : 0.01793
+            },
+            "worker_utilization" : {
+              "current" : 0.124,
+              "last_1_minute" : 0.1471,
+              "last_5_minutes" : 0.1539,
+              "last_15_minutes" : 0.1375,
+              "last_1_hour" : 0.1543,
+              "last_24_hours" : 0.1408,
+              "lifetime" : 0.1207
+            }
+          },
+          "name" : "grok",
+          "matches" : 150347591,
+          "patterns_per_field" : {
+            "audit_rest" : 1
+          }
+        }, {
+          "id" : "4ec1672b61375e08c1fb668dec26f6b9f8fe25f80771b3e00d89b00c6401f737",
+          "events" : {
+            "duration_in_millis" : 911,
+            "out" : 12466,
+            "in" : 12466
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_15_minutes" : 0.5,
+              "last_1_hour" : 0.0597,
+              "last_24_hours" : 0.07165,
+              "lifetime" : 0.07308
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 0.0,
+              "last_15_minutes" : 1.386E-5,
+              "last_1_hour" : 4.14E-5,
+              "last_24_hours" : 4.722E-5,
+              "lifetime" : 4.077E-5
+            }
+          },
+          "name" : "grok",
+          "matches" : 12466,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "d9f0566abed74ec70318ec62984d4836376295fe9dbb9fa738f8dcb95083c7b0",
+          "events" : {
+            "duration_in_millis" : 805089146,
+            "out" : 63163,
+            "in" : 63165
+          },
+          "failures" : 0,
+          "timeouts" : 26832,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 2859.0,
+              "last_1_minute" : 6096.0,
+              "last_5_minutes" : 12410.0,
+              "last_15_minutes" : 11570.0,
+              "last_1_hour" : 11080.0,
+              "last_24_hours" : 11480.0,
+              "lifetime" : 12750.0
+            },
+            "worker_utilization" : {
+              "current" : 9.165,
+              "last_1_minute" : 12.35,
+              "last_5_minutes" : 33.36,
+              "last_15_minutes" : 24.86,
+              "last_1_hour" : 26.2,
+              "last_24_hours" : 34.88,
+              "lifetime" : 36.03
+            }
+          },
+          "name" : "grok",
+          "matches" : 36331,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "60f0811b29c34aff3b30ee193537f204e836cc6d0777387b4b4fd3a5a809d121",
+          "events" : {
+            "duration_in_millis" : 605,
+            "out" : 12466,
+            "in" : 12466
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_15_minutes" : 0.5,
+              "last_1_hour" : 0.03483,
+              "last_24_hours" : 0.04806,
+              "lifetime" : 0.04853
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 0.0,
+              "last_15_minutes" : 1.386E-5,
+              "last_1_hour" : 2.415E-5,
+              "last_24_hours" : 3.167E-5,
+              "lifetime" : 2.707E-5
+            }
+          },
+          "name" : "grok",
+          "matches" : 12466,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "06adbc203eafd3528fe3cf3fec619e2662eb3274c6c7bc194be57603adaa1d21",
+          "events" : {
+            "duration_in_millis" : 5134953,
+            "out" : 4616,
+            "in" : 4616
+          },
+          "failures" : 191,
+          "timeouts" : 29,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 0.25,
+              "last_15_minutes" : 0.2222,
+              "last_1_hour" : 638.1,
+              "last_24_hours" : 1188.0,
+              "lifetime" : 1112.0
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 4.074E-5,
+              "last_15_minutes" : 2.772E-5,
+              "last_1_hour" : 0.1013,
+              "last_24_hours" : 0.2857,
+              "lifetime" : 0.2298
+            }
+          },
+          "name" : "grok",
+          "matches" : 4396,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "78e7148a73dadea6921fab5e7970d4d3ced1caa18e69d348caa1b2d001a812a2",
+          "events" : {
+            "duration_in_millis" : 822,
+            "out" : 12466,
+            "in" : 12466
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_15_minutes" : 0.5,
+              "last_1_hour" : 0.1692,
+              "last_24_hours" : 0.07034,
+              "lifetime" : 0.06594
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 0.0,
+              "last_15_minutes" : 1.386E-5,
+              "last_1_hour" : 1.173E-4,
+              "last_24_hours" : 4.635E-5,
+              "lifetime" : 3.679E-5
+            }
+          },
+          "name" : "grok",
+          "matches" : 12466,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "b245c07f1f74c62bbd9c4baff31effaa2fa960ceb84c941f8f7ce59f7128f9cd",
+          "events" : {
+            "duration_in_millis" : 6435292,
+            "out" : 173282404,
+            "in" : 173282404
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.03408,
+              "last_1_minute" : 0.03604,
+              "last_5_minutes" : 0.0386,
+              "last_15_minutes" : 0.0373,
+              "last_1_hour" : 0.03716,
+              "last_24_hours" : 0.03687,
+              "lifetime" : 0.03714
+            },
+            "worker_utilization" : {
+              "current" : 0.3035,
+              "last_1_minute" : 0.3472,
+              "last_5_minutes" : 0.3707,
+              "last_15_minutes" : 0.3252,
+              "last_1_hour" : 0.3557,
+              "last_24_hours" : 0.333,
+              "lifetime" : 0.288
+            }
+          },
+          "name" : "grok",
+          "matches" : 173282404,
+          "patterns_per_field" : {
+            "message" : 1
+          }
+        }, {
+          "id" : "7125ad22638629455e5b3e6ab6171a430ea7a8821a3377f718ca19a21c8e9cdb",
+          "events" : {
+            "duration_in_millis" : 2284410,
+            "out" : 173282404,
+            "in" : 173282404
+          },
+          "failures" : 14,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.0126,
+              "last_1_minute" : 0.01306,
+              "last_5_minutes" : 0.01417,
+              "last_15_minutes" : 0.01387,
+              "last_1_hour" : 0.01389,
+              "last_24_hours" : 0.01329,
+              "lifetime" : 0.01318
+            },
+            "worker_utilization" : {
+              "current" : 0.1122,
+              "last_1_minute" : 0.1258,
+              "last_5_minutes" : 0.1361,
+              "last_15_minutes" : 0.1209,
+              "last_1_hour" : 0.1329,
+              "last_24_hours" : 0.12,
+              "lifetime" : 0.1022
+            }
+          },
+          "name" : "grok",
+          "matches" : 173282390,
+          "patterns_per_field" : {
+            "event_kv" : 1
+          }
+        }, {
+          "id" : "30b9c35c0f156d50baefc8eddc9079f4e7a2df13e95f07aeca8a7a6a12a5a174",
+          "events" : {
+            "duration_in_millis" : 472,
+            "out" : 8842,
+            "in" : 8842
+          },
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_15_minutes" : 0.2,
+              "last_1_hour" : 0.04082,
+              "last_24_hours" : 0.04665,
+              "lifetime" : 0.05338
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 0.0,
+              "last_15_minutes" : 1.386E-5,
+              "last_1_hour" : 2.07E-5,
+              "last_24_hours" : 2.217E-5,
+              "lifetime" : 2.112E-5
+            }
+          },
+          "name" : "mutate"
+        }, {
+          "id" : "bfc0dbc2fd492375a197f37b32617736f4ffd368f3d8e32b288254c77dc67e29",
+          "events" : {
+            "duration_in_millis" : 2152793,
+            "out" : 173282404,
+            "in" : 173282404
+          },
+          "failures" : 18,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.01152,
+              "last_1_minute" : 0.01251,
+              "last_5_minutes" : 0.01393,
+              "last_15_minutes" : 0.01331,
+              "last_1_hour" : 0.01313,
+              "last_24_hours" : 0.01254,
+              "lifetime" : 0.01242
+            },
+            "worker_utilization" : {
+              "current" : 0.1026,
+              "last_1_minute" : 0.1205,
+              "last_5_minutes" : 0.1338,
+              "last_15_minutes" : 0.116,
+              "last_1_hour" : 0.1257,
+              "last_24_hours" : 0.1133,
+              "lifetime" : 0.09634
+            }
+          },
+          "name" : "grok",
+          "matches" : 173282386,
+          "patterns_per_field" : {
+            "seq_kv" : 1
+          }
+        }, {
+          "id" : "b4d3f6ff9b8c515a9ab91469f174a4796ac763251529246305dc09ea94befc0f",
+          "events" : {
+            "duration_in_millis" : 2217822,
+            "out" : 173282404,
+            "in" : 173282404
+          },
+          "failures" : 52180,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.01176,
+              "last_1_minute" : 0.01249,
+              "last_5_minutes" : 0.01383,
+              "last_15_minutes" : 0.01349,
+              "last_1_hour" : 0.01341,
+              "last_24_hours" : 0.01286,
+              "lifetime" : 0.0128
+            },
+            "worker_utilization" : {
+              "current" : 0.1047,
+              "last_1_minute" : 0.1203,
+              "last_5_minutes" : 0.1328,
+              "last_15_minutes" : 0.1176,
+              "last_1_hour" : 0.1284,
+              "last_24_hours" : 0.1162,
+              "lifetime" : 0.09925
+            }
+          },
+          "name" : "grok",
+          "matches" : 173230224,
+          "patterns_per_field" : {
+            "euid_kv" : 1
+          }
+        }, {
+          "id" : "47ad7eaaf3ee52f705aebc0b38b2adeea8e07a8df58cf1021cf847f1e3f184da",
+          "events" : {
+            "duration_in_millis" : 2154395,
+            "out" : 173282404,
+            "in" : 173282404
+          },
+          "failures" : 290323,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.01152,
+              "last_1_minute" : 0.0119,
+              "last_5_minutes" : 0.01341,
+              "last_15_minutes" : 0.01319,
+              "last_1_hour" : 0.01311,
+              "last_24_hours" : 0.01253,
+              "lifetime" : 0.01243
+            },
+            "worker_utilization" : {
+              "current" : 0.1026,
+              "last_1_minute" : 0.1146,
+              "last_5_minutes" : 0.1287,
+              "last_15_minutes" : 0.115,
+              "last_1_hour" : 0.1255,
+              "last_24_hours" : 0.1132,
+              "lifetime" : 0.09641
+            }
+          },
+          "name" : "grok",
+          "matches" : 172992081,
+          "patterns_per_field" : {
+            "return_kv" : 1
+          }
+        }, {
+          "id" : "7cac9b690966c192a642ef5779aef1763bd0bba4e1d39995e2d42825b468040d",
+          "events" : {
+            "duration_in_millis" : 28320988,
+            "out" : 173282404,
+            "in" : 173282404
+          },
+          "failures" : 52160,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.1683,
+              "last_1_minute" : 0.1661,
+              "last_5_minutes" : 0.1793,
+              "last_15_minutes" : 0.1755,
+              "last_1_hour" : 0.1752,
+              "last_24_hours" : 0.1665,
+              "lifetime" : 0.1634
+            },
+            "worker_utilization" : {
+              "current" : 1.499,
+              "last_1_minute" : 1.6,
+              "last_5_minutes" : 1.722,
+              "last_15_minutes" : 1.53,
+              "last_1_hour" : 1.677,
+              "last_24_hours" : 1.504,
+              "lifetime" : 1.267
+            }
+          },
+          "name" : "grok",
+          "matches" : 173230244,
+          "patterns_per_field" : {
+            "audit_rest" : 20
+          }
+        }, {
+          "id" : "5a12c8afd644d8878917e932eed23593fca693c76d11be31fcba155828bc3c12",
+          "events" : {
+            "duration_in_millis" : 895,
+            "out" : 4616,
+            "in" : 4616
+          },
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 0.0,
+              "last_15_minutes" : 0.2222,
+              "last_1_hour" : 0.2174,
+              "last_24_hours" : 0.1759,
+              "lifetime" : 0.1939
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 0.0,
+              "last_15_minutes" : 2.772E-5,
+              "last_1_hour" : 3.45E-5,
+              "last_24_hours" : 4.232E-5,
+              "lifetime" : 4.005E-5
+            }
+          },
+          "name" : "mutate"
+        }, {
+          "id" : "2e311cd22f5a03182a6b95ba7a74aed1c1be15da29af26d8c371fd54c05defad",
+          "events" : {
+            "duration_in_millis" : 713,
+            "out" : 12466,
+            "in" : 12466
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_15_minutes" : 0.0,
+              "last_1_hour" : 0.04478,
+              "last_24_hours" : 0.05505,
+              "lifetime" : 0.0572
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 0.0,
+              "last_15_minutes" : 0.0,
+              "last_1_hour" : 3.105E-5,
+              "last_24_hours" : 3.628E-5,
+              "lifetime" : 3.191E-5
+            }
+          },
+          "name" : "grok",
+          "matches" : 12466,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "593ca9181ecfb926a57de73f7b06a37aef12a3ac364cc2b17a67daea7d4ba1be",
+          "events" : {
+            "duration_in_millis" : 343,
+            "out" : 14,
+            "in" : 14
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_5_minutes" : "Infinity",
+              "last_15_minutes" : "Infinity",
+              "last_1_hour" : "Infinity",
+              "last_24_hours" : 61.0,
+              "lifetime" : 24.5
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 4.074E-5,
+              "last_15_minutes" : 1.386E-5,
+              "last_1_hour" : 1.725E-5,
+              "last_24_hours" : 1.756E-5,
+              "lifetime" : 1.535E-5
+            }
+          },
+          "name" : "grok",
+          "matches" : 14,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "22482e86714a00a3b0000797bfe90d658feb83df05a9eb405030ca839aba6461",
+          "events" : {
+            "duration_in_millis" : 216,
+            "out" : 0,
+            "in" : 0
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_15_minutes" : "Infinity",
+              "last_1_hour" : "Infinity",
+              "last_24_hours" : "Infinity",
+              "lifetime" : "Infinity"
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 0.0,
+              "last_15_minutes" : 1.386E-5,
+              "last_1_hour" : 1.035E-5,
+              "last_24_hours" : 1.123E-5,
+              "lifetime" : 9.666E-6
+            }
+          },
+          "name" : "grok",
+          "matches" : 0,
+          "patterns_per_field" : {
+            "task_content_tmp" : 1
+          }
+        }, {
+          "id" : "1b76b66ffc4011445c6e607527aa6d7e60193e02ec3b82bce2e0e6e4e447dd57",
+          "events" : {
+            "duration_in_millis" : 1933,
+            "out" : 8842,
+            "in" : 8842
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_15_minutes" : 0.2,
+              "last_1_hour" : 0.1633,
+              "last_24_hours" : 0.2051,
+              "lifetime" : 0.2186
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 0.0,
+              "last_15_minutes" : 1.386E-5,
+              "last_1_hour" : 8.281E-5,
+              "last_24_hours" : 9.746E-5,
+              "lifetime" : 8.65E-5
+            }
+          },
+          "name" : "grok",
+          "matches" : 8842,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "d39cea66663f83126a6cd77da42b3e6207b771aa7593b7455e2754729c6e5fcf",
+          "events" : {
+            "duration_in_millis" : 1695,
+            "out" : 12466,
+            "in" : 12466
+          },
+          "failures" : 12466,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_5_minutes" : "Infinity",
+              "last_15_minutes" : 1.5,
+              "last_1_hour" : 0.1144,
+              "last_24_hours" : 0.1348,
+              "lifetime" : 0.136
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 4.074E-5,
+              "last_15_minutes" : 4.158E-5,
+              "last_1_hour" : 7.936E-5,
+              "last_24_hours" : 8.882E-5,
+              "lifetime" : 7.585E-5
+            }
+          },
+          "name" : "grok",
+          "matches" : 0,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "dd32ecf374bc926b2ffdb55214563e421e4162eca76af2e5a9bd2b8a0bb5c9c7",
+          "events" : {
+            "duration_in_millis" : 441299,
+            "out" : 213401458,
+            "in" : 213401458
+          },
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.001596,
+              "last_1_minute" : 0.001969,
+              "last_5_minutes" : 0.00225,
+              "last_15_minutes" : 0.002079,
+              "last_1_hour" : 0.002065,
+              "last_24_hours" : 0.002044,
+              "lifetime" : 0.002068
+            },
+            "worker_utilization" : {
+              "current" : 0.0203,
+              "last_1_minute" : 0.02491,
+              "last_5_minutes" : 0.02722,
+              "last_15_minutes" : 0.02265,
+              "last_1_hour" : 0.02368,
+              "last_24_hours" : 0.02261,
+              "lifetime" : 0.01975
+            }
+          },
+          "name" : "mutate"
+        }, {
+          "id" : "29b6e22b9bec3bf1313b8742280558cc0897c16672884f5f93276e948c48117f",
+          "events" : {
+            "duration_in_millis" : 113979,
+            "out" : 1104313,
+            "in" : 1104313
+          },
+          "failures" : 418010,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.1154,
+              "last_1_minute" : 0.1179,
+              "last_5_minutes" : 0.1194,
+              "last_15_minutes" : 0.1072,
+              "last_1_hour" : 0.1174,
+              "last_24_hours" : 0.103,
+              "lifetime" : 0.1032
+            },
+            "worker_utilization" : {
+              "current" : 0.00641,
+              "last_1_minute" : 0.005469,
+              "last_5_minutes" : 0.005337,
+              "last_15_minutes" : 0.005128,
+              "last_1_hour" : 0.005214,
+              "last_24_hours" : 0.005995,
+              "lifetime" : 0.005101
+            }
+          },
+          "name" : "grok",
+          "matches" : 686303,
+          "patterns_per_field" : {
+            "message" : 1
+          }
+        }, {
+          "id" : "215ee6d825e2a54e2902d615c061c657e676321c66e9d6ac8db79fa4dd6cbc14",
+          "events" : {
+            "duration_in_millis" : 325,
+            "out" : 25,
+            "in" : 25
+          },
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_15_minutes" : "Infinity",
+              "last_1_hour" : "Infinity",
+              "last_24_hours" : 16.71,
+              "lifetime" : 13.0
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 0.0,
+              "last_15_minutes" : 1.386E-5,
+              "last_1_hour" : 1.38E-5,
+              "last_24_hours" : 1.684E-5,
+              "lifetime" : 1.454E-5
+            }
+          },
+          "name" : "mutate"
+        }, {
+          "id" : "03e713821e7665adc4049093b88b3989616d19fcb792942bae5d74e04adcda27",
+          "events" : {
+            "duration_in_millis" : 13844,
+            "out" : 186981,
+            "in" : 186981
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.04762,
+              "last_1_minute" : 0.08929,
+              "last_5_minutes" : 0.072,
+              "last_15_minutes" : 0.07292,
+              "last_1_hour" : 0.06777,
+              "last_24_hours" : 0.07036,
+              "lifetime" : 0.07404
+            },
+            "worker_utilization" : {
+              "current" : 0.001068,
+              "last_1_minute" : 0.001013,
+              "last_5_minutes" : 7.334E-4,
+              "last_15_minutes" : 6.791E-4,
+              "last_1_hour" : 6.935E-4,
+              "last_24_hours" : 7.129E-4,
+              "lifetime" : 6.195E-4
+            }
+          },
+          "name" : "grok",
+          "matches" : 186981,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "e4266c9ad326611e0f81e5132db6f40d132a69f0a1d0355b981c0b412e43d1f7",
+          "events" : {
+            "duration_in_millis" : 22635505,
+            "out" : 1176936,
+            "in" : 1176936
+          },
+          "failures" : 565575,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 12.4,
+              "last_1_minute" : 15.89,
+              "last_5_minutes" : 18.28,
+              "last_15_minutes" : 18.08,
+              "last_1_hour" : 18.34,
+              "last_24_hours" : 18.86,
+              "lifetime" : 19.23
+            },
+            "worker_utilization" : {
+              "current" : 1.842,
+              "last_1_minute" : 1.404,
+              "last_5_minutes" : 1.277,
+              "last_15_minutes" : 1.093,
+              "last_1_hour" : 1.236,
+              "last_24_hours" : 1.168,
+              "lifetime" : 1.013
+            }
+          },
+          "name" : "grok",
+          "matches" : 611361,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "e3455a2cffc80a1cb09114ab59a1e369b19b3c786ea363fba2ff84c4281e69be",
+          "events" : {
+            "duration_in_millis" : 850,
+            "out" : 12466,
+            "in" : 12466
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_15_minutes" : 0.5,
+              "last_1_hour" : 0.05473,
+              "last_24_hours" : 0.06509,
+              "lifetime" : 0.06819
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 0.0,
+              "last_15_minutes" : 1.386E-5,
+              "last_1_hour" : 3.795E-5,
+              "last_24_hours" : 4.29E-5,
+              "lifetime" : 3.804E-5
+            }
+          },
+          "name" : "grok",
+          "matches" : 12466,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "e0c5eb65068a01a54795e911ab3565f5abcf0c760e85e5dcc3f20ec1ca40bc53",
+          "events" : {
+            "duration_in_millis" : 3707780,
+            "out" : 173209422,
+            "in" : 173209422
+          },
+          "failures" : 2,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.02004,
+              "last_1_minute" : 0.02099,
+              "last_5_minutes" : 0.02238,
+              "last_15_minutes" : 0.02166,
+              "last_1_hour" : 0.02171,
+              "last_24_hours" : 0.02135,
+              "lifetime" : 0.02141
+            },
+            "worker_utilization" : {
+              "current" : 0.1784,
+              "last_1_minute" : 0.2038,
+              "last_5_minutes" : 0.2149,
+              "last_15_minutes" : 0.1888,
+              "last_1_hour" : 0.2078,
+              "last_24_hours" : 0.1928,
+              "lifetime" : 0.1659
+            }
+          },
+          "name" : "grok",
+          "matches" : 173209420,
+          "patterns_per_field" : {
+            "audit_rest" : 1
+          }
+        }, {
+          "id" : "d0019140ffcdf7e105df735eed228366919bb4c5d6c7732f5fc79088caa6bcf3",
+          "events" : {
+            "duration_in_millis" : 706,
+            "out" : 12466,
+            "in" : 12466
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_15_minutes" : 0.5,
+              "last_1_hour" : 0.04478,
+              "last_24_hours" : 0.05505,
+              "lifetime" : 0.05663
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 0.0,
+              "last_15_minutes" : 1.386E-5,
+              "last_1_hour" : 3.105E-5,
+              "last_24_hours" : 3.628E-5,
+              "lifetime" : 3.159E-5
+            }
+          },
+          "name" : "grok",
+          "matches" : 12466,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "4c7e276a365eae66f70988e22b9b0532fa87b2b2e4135e4d6e5528a25b325bfa",
+          "events" : {
+            "duration_in_millis" : 634,
+            "out" : 12466,
+            "in" : 12466
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_15_minutes" : 0.5,
+              "last_1_hour" : 0.0995,
+              "last_24_hours" : 0.05046,
+              "lifetime" : 0.05086
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 0.0,
+              "last_15_minutes" : 1.386E-5,
+              "last_1_hour" : 6.901E-5,
+              "last_24_hours" : 3.325E-5,
+              "lifetime" : 2.837E-5
+            }
+          },
+          "name" : "grok",
+          "matches" : 12466,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "2f5a3173602b0095eee670da522fb3286479d1481b375255d81664ebea6b8c6b",
+          "events" : {
+            "duration_in_millis" : 883,
+            "out" : 12466,
+            "in" : 12466
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_5_minutes" : "Infinity",
+              "last_15_minutes" : 1.0,
+              "last_1_hour" : 0.0796,
+              "last_24_hours" : 0.07012,
+              "lifetime" : 0.07083
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 4.074E-5,
+              "last_15_minutes" : 2.772E-5,
+              "last_1_hour" : 5.521E-5,
+              "last_24_hours" : 4.621E-5,
+              "lifetime" : 3.952E-5
+            }
+          },
+          "name" : "grok",
+          "matches" : 12466,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "b700f6600caf5275d66ae838f9669adb2ca50ac7a41f5947b8e97dcd3bc8db02",
+          "events" : {
+            "duration_in_millis" : 800,
+            "out" : 12466,
+            "in" : 12466
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_5_minutes" : "Infinity",
+              "last_15_minutes" : 0.5,
+              "last_1_hour" : 0.05473,
+              "last_24_hours" : 0.05985,
+              "lifetime" : 0.06417
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 4.074E-5,
+              "last_15_minutes" : 1.386E-5,
+              "last_1_hour" : 3.795E-5,
+              "last_24_hours" : 3.944E-5,
+              "lifetime" : 3.58E-5
+            }
+          },
+          "name" : "grok",
+          "matches" : 12466,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "2806bd4288597f08da2d7f0eebd9d5ba5a841b788fe8d9143b8a29a4516749a5",
+          "events" : {
+            "duration_in_millis" : 744,
+            "out" : 12466,
+            "in" : 12466
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_15_minutes" : 0.5,
+              "last_1_hour" : 0.04975,
+              "last_24_hours" : 0.0557,
+              "lifetime" : 0.05968
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 0.0,
+              "last_15_minutes" : 1.386E-5,
+              "last_1_hour" : 3.45E-5,
+              "last_24_hours" : 3.671E-5,
+              "lifetime" : 3.33E-5
+            }
+          },
+          "name" : "grok",
+          "matches" : 12466,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "ad0e3a6c21989f15d6499630f426ef592964970a300c937c67e5333dcfc09785",
+          "events" : {
+            "duration_in_millis" : 676,
+            "out" : 12466,
+            "in" : 12466
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_15_minutes" : 0.5,
+              "last_1_hour" : 0.04478,
+              "last_24_hours" : 0.05308,
+              "lifetime" : 0.05423
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 0.0,
+              "last_15_minutes" : 1.386E-5,
+              "last_1_hour" : 3.105E-5,
+              "last_24_hours" : 3.498E-5,
+              "lifetime" : 3.025E-5
+            }
+          },
+          "name" : "grok",
+          "matches" : 12466,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "cdddf4997e991d6312943c3c075b445a45f13034dc2128bccc1edc0d7adf97c2",
+          "events" : {
+            "duration_in_millis" : 5657,
+            "out" : 186981,
+            "in" : 186981
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.04762,
+              "last_1_minute" : 0.03571,
+              "last_5_minutes" : 0.028,
+              "last_15_minutes" : 0.02679,
+              "last_1_hour" : 0.03136,
+              "last_24_hours" : 0.02859,
+              "lifetime" : 0.03025
+            },
+            "worker_utilization" : {
+              "current" : 0.001068,
+              "last_1_minute" : 4.051E-4,
+              "last_5_minutes" : 2.852E-4,
+              "last_15_minutes" : 2.495E-4,
+              "last_1_hour" : 3.209E-4,
+              "last_24_hours" : 2.896E-4,
+              "lifetime" : 2.532E-4
+            }
+          },
+          "name" : "grok",
+          "matches" : 186981,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "bfd0033193bdd817208dc9282a228a926f2e62c36f533582c7c9f0b6b842bbc7",
+          "events" : {
+            "duration_in_millis" : 332,
+            "out" : 25,
+            "in" : 25
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_5_minutes" : "Infinity",
+              "last_15_minutes" : "Infinity",
+              "last_1_hour" : "Infinity",
+              "last_24_hours" : 17.71,
+              "lifetime" : 13.28
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 4.074E-5,
+              "last_15_minutes" : 1.386E-5,
+              "last_1_hour" : 1.725E-5,
+              "last_24_hours" : 1.785E-5,
+              "lifetime" : 1.486E-5
+            }
+          },
+          "name" : "grok",
+          "matches" : 25,
+          "patterns_per_field" : {
+            "changed_attrs_tmp" : 1
+          }
+        }, {
+          "id" : "14a1ba23387b01c649f49a997961e71b2645e157bd06fcc49b87549ddac3106f",
+          "events" : {
+            "duration_in_millis" : 19034,
+            "out" : 6618397,
+            "in" : 6618397
+          },
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.005405,
+              "last_5_minutes" : 0.007386,
+              "last_15_minutes" : 0.008449,
+              "last_1_hour" : 0.003939,
+              "last_24_hours" : 0.002799,
+              "lifetime" : 0.002876
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 2.025E-4,
+              "last_5_minutes" : 2.037E-4,
+              "last_15_minutes" : 1.94E-4,
+              "last_1_hour" : 3.45E-4,
+              "last_24_hours" : 9.713E-4,
+              "lifetime" : 8.518E-4
+            }
+          },
+          "name" : "mutate"
+        }, {
+          "id" : "ba98ee44b27655d501885f438586786252654fe6ab1f8189389127e228355560",
+          "events" : {
+            "duration_in_millis" : 8762,
+            "out" : 1176936,
+            "in" : 1176936
+          },
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.006881,
+              "last_5_minutes" : 0.00758,
+              "last_15_minutes" : 0.007334,
+              "last_1_hour" : 0.007368,
+              "last_24_hours" : 0.00737,
+              "lifetime" : 0.007445
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 6.076E-4,
+              "last_5_minutes" : 5.297E-4,
+              "last_15_minutes" : 4.435E-4,
+              "last_1_hour" : 4.969E-4,
+              "last_24_hours" : 4.565E-4,
+              "lifetime" : 3.921E-4
+            }
+          },
+          "name" : "mutate"
+        }, {
+          "id" : "0a95af3238982ae9752f6dc6efa95938b688c57af018705564dd0f119e23b0c5",
+          "events" : {
+            "duration_in_millis" : 934,
+            "out" : 12466,
+            "in" : 12466
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_15_minutes" : 0.5,
+              "last_1_hour" : 0.0597,
+              "last_24_hours" : 0.07187,
+              "lifetime" : 0.07492
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 0.0,
+              "last_15_minutes" : 1.386E-5,
+              "last_1_hour" : 4.14E-5,
+              "last_24_hours" : 4.736E-5,
+              "lifetime" : 4.18E-5
+            }
+          },
+          "name" : "grok",
+          "matches" : 12466,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "de5d4c65a10b959ed44bf345e7dafa1bd903c0f9e571598853e32231b6063ecb",
+          "events" : {
+            "duration_in_millis" : 253,
+            "out" : 0,
+            "in" : 0
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_15_minutes" : "Infinity",
+              "last_1_hour" : "Infinity",
+              "last_24_hours" : "Infinity",
+              "lifetime" : "Infinity"
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 0.0,
+              "last_15_minutes" : 1.386E-5,
+              "last_1_hour" : 1.035E-5,
+              "last_24_hours" : 1.353E-5,
+              "lifetime" : 1.132E-5
+            }
+          },
+          "name" : "grok",
+          "matches" : 0,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "2d0cb6608e683fdaac65aefcc0adb2b54f538d86f5acbb369f27fcdcbf1eeaba",
+          "events" : {
+            "duration_in_millis" : 371,
+            "out" : 25,
+            "in" : 25
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_15_minutes" : "Infinity",
+              "last_1_hour" : "Infinity",
+              "last_24_hours" : 18.57,
+              "lifetime" : 14.84
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 0.0,
+              "last_15_minutes" : 1.386E-5,
+              "last_1_hour" : 1.725E-5,
+              "last_24_hours" : 1.871E-5,
+              "lifetime" : 1.66E-5
+            }
+          },
+          "name" : "grok",
+          "matches" : 25,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "8ebde37a2f4e861e5d910e37a1150c9fc930d946928be5d0ef941e3012be2bbe",
+          "events" : {
+            "duration_in_millis" : 2161814,
+            "out" : 173282404,
+            "in" : 173282404
+          },
+          "failures" : 52183,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.01152,
+              "last_1_minute" : 0.01205,
+              "last_5_minutes" : 0.01344,
+              "last_15_minutes" : 0.01321,
+              "last_1_hour" : 0.01318,
+              "last_24_hours" : 0.01257,
+              "lifetime" : 0.01248
+            },
+            "worker_utilization" : {
+              "current" : 0.1025,
+              "last_1_minute" : 0.1161,
+              "last_5_minutes" : 0.1291,
+              "last_15_minutes" : 0.1152,
+              "last_1_hour" : 0.1261,
+              "last_24_hours" : 0.1136,
+              "lifetime" : 0.09674
+            }
+          },
+          "name" : "grok",
+          "matches" : 173230221,
+          "patterns_per_field" : {
+            "egid_kv" : 1
+          }
+        }, {
+          "id" : "2d709bd0db4fa2d799e59cce997061bab2b54a441ea2322bbc36ae723df7289b",
+          "events" : {
+            "duration_in_millis" : 12264,
+            "out" : 469049,
+            "in" : 469049
+          },
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.03226,
+              "last_5_minutes" : 0.03189,
+              "last_15_minutes" : 0.0303,
+              "last_1_hour" : 0.03293,
+              "last_24_hours" : 0.02655,
+              "lifetime" : 0.02615
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 6.076E-4,
+              "last_5_minutes" : 5.704E-4,
+              "last_15_minutes" : 5.405E-4,
+              "last_1_hour" : 5.659E-4,
+              "last_24_hours" : 6.719E-4,
+              "lifetime" : 5.488E-4
+            }
+          },
+          "name" : "ruby"
+        }, {
+          "id" : "9138a8e40322c09edc1b37eaf6bdd7521888a455ea7a6005cdb5377e20598a1e",
+          "events" : {
+            "duration_in_millis" : 882,
+            "out" : 12466,
+            "in" : 12466
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_1_minute" : "Infinity",
+              "last_5_minutes" : "Infinity",
+              "last_15_minutes" : 1.0,
+              "last_1_hour" : 0.0597,
+              "last_24_hours" : 0.07187,
+              "lifetime" : 0.07075
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 2.025E-4,
+              "last_5_minutes" : 4.074E-5,
+              "last_15_minutes" : 2.772E-5,
+              "last_1_hour" : 4.14E-5,
+              "last_24_hours" : 4.736E-5,
+              "lifetime" : 3.947E-5
+            }
+          },
+          "name" : "grok",
+          "matches" : 12466,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "071a1af176104ff3e0ea4ceae6d2ec9055babde47712888c7f15805c5172d700",
+          "events" : {
+            "duration_in_millis" : 835,
+            "out" : 12466,
+            "in" : 12466
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_15_minutes" : 0.5,
+              "last_1_hour" : 0.05473,
+              "last_24_hours" : 0.06706,
+              "lifetime" : 0.06698
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 0.0,
+              "last_15_minutes" : 1.386E-5,
+              "last_1_hour" : 3.795E-5,
+              "last_24_hours" : 4.42E-5,
+              "lifetime" : 3.737E-5
+            }
+          },
+          "name" : "grok",
+          "matches" : 12466,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "3522884a1bd6ac9dafad600a5026c8b1708b835f58203264809857625819771c",
+          "events" : {
+            "duration_in_millis" : 30915,
+            "out" : 904491,
+            "in" : 904491
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.04878,
+              "last_1_minute" : 0.03226,
+              "last_5_minutes" : 0.04459,
+              "last_15_minutes" : 0.03594,
+              "last_1_hour" : 0.03698,
+              "last_24_hours" : 0.03343,
+              "lifetime" : 0.03418
+            },
+            "worker_utilization" : {
+              "current" : 0.002136,
+              "last_1_minute" : 0.001418,
+              "last_5_minutes" : 0.00163,
+              "last_15_minutes" : 0.001427,
+              "last_1_hour" : 0.001335,
+              "last_24_hours" : 0.00158,
+              "lifetime" : 0.001383
+            }
+          },
+          "name" : "grok",
+          "matches" : 904491,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "2ee3fe07454490ae9f52756a96b05e310cdb0d5110e1909836097625333144d6",
+          "events" : {
+            "duration_in_millis" : 1741,
+            "out" : 8842,
+            "in" : 8842
+          },
+          "failures" : 1,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_5_minutes" : "Infinity",
+              "last_15_minutes" : 0.4,
+              "last_1_hour" : 0.2313,
+              "last_24_hours" : 0.183,
+              "lifetime" : 0.1969
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 4.074E-5,
+              "last_15_minutes" : 2.772E-5,
+              "last_1_hour" : 1.173E-4,
+              "last_24_hours" : 8.695E-5,
+              "lifetime" : 7.791E-5
+            }
+          },
+          "name" : "grok",
+          "matches" : 8841,
+          "patterns_per_field" : {
+            "scriptblock_tmp" : 1
+          }
+        }, {
+          "id" : "ffcd4353dc261c23758aec5816470417d04c02f4ddb30b1de1e4b6d569c00dcd",
+          "events" : {
+            "duration_in_millis" : 768,
+            "out" : 12466,
+            "in" : 12466
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_15_minutes" : 0.5,
+              "last_1_hour" : 0.04478,
+              "last_24_hours" : 0.06051,
+              "lifetime" : 0.06161
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 0.0,
+              "last_15_minutes" : 1.386E-5,
+              "last_1_hour" : 3.105E-5,
+              "last_24_hours" : 3.988E-5,
+              "lifetime" : 3.437E-5
+            }
+          },
+          "name" : "grok",
+          "matches" : 12466,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "4cb4ad1c2cd4408fd78420cfbfa53599c3ccb5ed5bfdf90677e7a031c992fa29",
+          "events" : {
+            "duration_in_millis" : 2987057,
+            "out" : 150451763,
+            "in" : 150451763
+          },
+          "failures" : 9633,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.0179,
+              "last_1_minute" : 0.01927,
+              "last_5_minutes" : 0.02099,
+              "last_15_minutes" : 0.02049,
+              "last_1_hour" : 0.02041,
+              "last_24_hours" : 0.01989,
+              "lifetime" : 0.01985
+            },
+            "worker_utilization" : {
+              "current" : 0.1367,
+              "last_1_minute" : 0.1596,
+              "last_5_minutes" : 0.1736,
+              "last_15_minutes" : 0.1537,
+              "last_1_hour" : 0.1699,
+              "last_24_hours" : 0.1555,
+              "lifetime" : 0.1337
+            }
+          },
+          "name" : "grok",
+          "matches" : 150442130,
+          "patterns_per_field" : {
+            "audit_rest" : 1
+          }
+        }, {
+          "id" : "e1f6c3559a755a7cb16e1dcc9d5a0111bc7fceefea20cb0617ff186698231c7a",
+          "events" : {
+            "duration_in_millis" : 22245,
+            "out" : 1104313,
+            "in" : 1104313
+          },
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.01923,
+              "last_1_minute" : 0.01747,
+              "last_5_minutes" : 0.02735,
+              "last_15_minutes" : 0.02027,
+              "last_1_hour" : 0.02315,
+              "last_24_hours" : 0.01918,
+              "lifetime" : 0.02014
+            },
+            "worker_utilization" : {
+              "current" : 0.001068,
+              "last_1_minute" : 8.101E-4,
+              "last_5_minutes" : 0.001222,
+              "last_15_minutes" : 9.701E-4,
+              "last_1_hour" : 0.001028,
+              "last_24_hours" : 0.001116,
+              "lifetime" : 9.955E-4
+            }
+          },
+          "name" : "mutate"
+        }, {
+          "id" : "86f8eace2c68220c276b31b0b45fbb2530389d91dbb8678395ca3763a8fdd534",
+          "events" : {
+            "duration_in_millis" : 787,
+            "out" : 12466,
+            "in" : 12466
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_15_minutes" : 0.5,
+              "last_1_hour" : 0.04975,
+              "last_24_hours" : 0.06029,
+              "lifetime" : 0.06313
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 0.0,
+              "last_15_minutes" : 1.386E-5,
+              "last_1_hour" : 3.45E-5,
+              "last_24_hours" : 3.973E-5,
+              "lifetime" : 3.522E-5
+            }
+          },
+          "name" : "grok",
+          "matches" : 12466,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "0a7ce9b7f81146a5114ac81ca2bbea1100bb7d99f85b64854c6516366603deb8",
+          "events" : {
+            "duration_in_millis" : 985,
+            "out" : 4469,
+            "in" : 4469
+          },
+          "failures" : 0,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_5_minutes" : 1.0,
+              "last_15_minutes" : 0.6667,
+              "last_1_hour" : 0.7273,
+              "last_24_hours" : 0.2196,
+              "lifetime" : 0.2204
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 4.074E-5,
+              "last_15_minutes" : 2.772E-5,
+              "last_1_hour" : 2.76E-5,
+              "last_24_hours" : 4.837E-5,
+              "lifetime" : 4.408E-5
+            }
+          },
+          "name" : "grok",
+          "matches" : 4469,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "1d62eaa2d8674f7821a75bf363538f1f30fff57e2569e7692d4a26ba192abf21",
+          "events" : {
+            "duration_in_millis" : 2058108,
+            "out" : 173282404,
+            "in" : 173282404
+          },
+          "failures" : 35,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.01116,
+              "last_1_minute" : 0.01182,
+              "last_5_minutes" : 0.01323,
+              "last_15_minutes" : 0.01271,
+              "last_1_hour" : 0.01254,
+              "last_24_hours" : 0.01202,
+              "lifetime" : 0.01188
+            },
+            "worker_utilization" : {
+              "current" : 0.0993,
+              "last_1_minute" : 0.1138,
+              "last_5_minutes" : 0.1271,
+              "last_15_minutes" : 0.1108,
+              "last_1_hour" : 0.12,
+              "last_24_hours" : 0.1085,
+              "lifetime" : 0.0921
+            }
+          },
+          "name" : "grok",
+          "matches" : 173282369,
+          "patterns_per_field" : {
+            "process_kv" : 1
+          }
+        }, {
+          "id" : "ba18a919e8ea12b4ccbef1e04b47c59a650348ae77673322b22b7c0b8ba37bd4",
+          "events" : {
+            "duration_in_millis" : 7080,
+            "out" : 611361,
+            "in" : 611361
+          },
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.0122,
+              "last_1_minute" : 0.00823,
+              "last_5_minutes" : 0.01099,
+              "last_15_minutes" : 0.01096,
+              "last_1_hour" : 0.01126,
+              "last_24_hours" : 0.01102,
+              "lifetime" : 0.01158
+            },
+            "worker_utilization" : {
+              "current" : 0.001068,
+              "last_1_minute" : 4.051E-4,
+              "last_5_minutes" : 4.074E-4,
+              "last_15_minutes" : 3.465E-4,
+              "last_1_hour" : 3.968E-4,
+              "last_24_hours" : 3.54E-4,
+              "lifetime" : 3.168E-4
+            }
+          },
+          "name" : "mutate"
+        }, {
+          "id" : "7d39544dda91bea04c6ae6323b3a0e2536b424e7ca94160ad118c5455c8bd157",
+          "events" : {
+            "duration_in_millis" : 179166,
+            "out" : 6618397,
+            "in" : 6618397
+          },
+          "failures" : 2,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.02804,
+              "last_1_minute" : 0.03784,
+              "last_5_minutes" : 0.04431,
+              "last_15_minutes" : 0.04043,
+              "last_1_hour" : 0.03049,
+              "last_24_hours" : 0.02705,
+              "lifetime" : 0.02707
+            },
+            "worker_utilization" : {
+              "current" : 0.003203,
+              "last_1_minute" : 0.001418,
+              "last_5_minutes" : 0.001222,
+              "last_15_minutes" : 9.285E-4,
+              "last_1_hour" : 0.002671,
+              "last_24_hours" : 0.009388,
+              "lifetime" : 0.008018
+            }
+          },
+          "name" : "grok",
+          "matches" : 6618395,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "6d9994b97c4a4fc39406e8fe39aed493b944b561a2e32ae82090ab7bde0b041a",
+          "events" : {
+            "duration_in_millis" : 263,
+            "out" : 0,
+            "in" : 0
+          },
+          "flow" : {
+            "worker_millis_per_event" : {
+              "last_5_minutes" : "Infinity",
+              "last_15_minutes" : "Infinity",
+              "last_1_hour" : "Infinity",
+              "last_24_hours" : "Infinity",
+              "lifetime" : "Infinity"
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.0,
+              "last_5_minutes" : 4.074E-5,
+              "last_15_minutes" : 1.386E-5,
+              "last_1_hour" : 1.38E-5,
+              "last_24_hours" : 1.454E-5,
+              "lifetime" : 1.177E-5
+            }
+          },
+          "name" : "mutate"
+        }, {
+          "id" : "c0a14b8cfa7ae19c3b942f9f9df8acaa83f339257c78410f54bc193d909ce8ff",
+          "events" : {
+            "duration_in_millis" : 193174,
+            "out" : 1081884,
+            "in" : 1081884
+          },
+          "failures" : 1,
+          "timeouts" : 1,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.08889,
+              "last_1_minute" : 0.1086,
+              "last_5_minutes" : 0.1324,
+              "last_15_minutes" : 0.1942,
+              "last_1_hour" : 0.1534,
+              "last_24_hours" : 0.1352,
+              "lifetime" : 0.1786
+            },
+            "worker_utilization" : {
+              "current" : 0.004271,
+              "last_1_minute" : 0.004861,
+              "last_5_minutes" : 0.005908,
+              "last_15_minutes" : 0.009729,
+              "last_1_hour" : 0.00689,
+              "last_24_hours" : 0.007702,
+              "lifetime" : 0.008645
+            }
+          },
+          "name" : "grok",
+          "matches" : 1081882,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "0d75c27db8a006a27b0fe070c6ba7f2a7e741001de3e0a7f1ab845237c60e24c",
+          "events" : {
+            "duration_in_millis" : 981258,
+            "out" : 213402458,
+            "in" : 213402458
+          },
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.004191,
+              "last_1_minute" : 0.004035,
+              "last_5_minutes" : 0.004767,
+              "last_15_minutes" : 0.004478,
+              "last_1_hour" : 0.004227,
+              "last_24_hours" : 0.004419,
+              "lifetime" : 0.004598
+            },
+            "worker_utilization" : {
+              "current" : 0.05552,
+              "last_1_minute" : 0.04982,
+              "last_5_minutes" : 0.05785,
+              "last_15_minutes" : 0.04873,
+              "last_1_hour" : 0.04848,
+              "last_24_hours" : 0.04887,
+              "lifetime" : 0.04391
+            }
+          },
+          "name" : "mutate"
+        }, {
+          "id" : "d213d2322a9f663dbd413a7be71276f5e137473e42079a7e7efdb418c8e5c0dd",
+          "events" : {
+            "duration_in_millis" : 16754,
+            "out" : 469049,
+            "in" : 469049
+          },
+          "failures" : 1,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.0,
+              "last_1_minute" : 0.03226,
+              "last_5_minutes" : 0.03872,
+              "last_15_minutes" : 0.03885,
+              "last_1_hour" : 0.03975,
+              "last_24_hours" : 0.03642,
+              "lifetime" : 0.03572
+            },
+            "worker_utilization" : {
+              "current" : 0.0,
+              "last_1_minute" : 6.076E-4,
+              "last_5_minutes" : 6.926E-4,
+              "last_15_minutes" : 6.929E-4,
+              "last_1_hour" : 6.832E-4,
+              "last_24_hours" : 9.216E-4,
+              "lifetime" : 7.498E-4
+            }
+          },
+          "name" : "grok",
+          "matches" : 469048,
+          "patterns_per_field" : {
+            "[snare][message]" : 1
+          }
+        }, {
+          "id" : "f00b6df417c4a124b2fa0512bb8b641ce25f8f1ca93ede03912b9686f9b1674e",
+          "events" : {
+            "duration_in_millis" : 2173367,
+            "out" : 173282404,
+            "in" : 173282404
+          },
+          "failures" : 52181,
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.01452,
+              "last_1_minute" : 0.01352,
+              "last_5_minutes" : 0.01427,
+              "last_15_minutes" : 0.01344,
+              "last_1_hour" : 0.01324,
+              "last_24_hours" : 0.01263,
+              "lifetime" : 0.01254
+            },
+            "worker_utilization" : {
+              "current" : 0.1292,
+              "last_1_minute" : 0.1302,
+              "last_5_minutes" : 0.1371,
+              "last_15_minutes" : 0.1172,
+              "last_1_hour" : 0.1268,
+              "last_24_hours" : 0.1141,
+              "lifetime" : 0.09726
+            }
+          },
+          "name" : "grok",
+          "matches" : 173230223,
+          "patterns_per_field" : {
+            "gid_kv" : 1
+          }
+        } ],
+        "outputs" : [ {
+          "id" : "3a36c69ee99f9852c27fc36da32ab9fc38d60729a90ef5655aad3c71df7864bc",
+          "events" : {
+            "duration_in_millis" : 373202737,
+            "out" : 213399086,
+            "in" : 213401458
+          },
+          "bulk_requests" : {
+            "successes" : 463297,
+            "failures" : 3451,
+            "responses" : {
+              "200" : 463297,
+              "429" : 1
+            }
+          },
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.6284,
+              "last_1_minute" : 0.5543,
+              "last_5_minutes" : 0.9034,
+              "last_15_minutes" : 2.469,
+              "last_1_hour" : 1.331,
+              "last_24_hours" : 1.556,
+              "lifetime" : 1.749
+            },
+            "worker_utilization" : {
+              "current" : 7.989,
+              "last_1_minute" : 7.012,
+              "last_5_minutes" : 10.93,
+              "last_15_minutes" : 26.89,
+              "last_1_hour" : 15.27,
+              "last_24_hours" : 17.21,
+              "lifetime" : 16.7
+            }
+          },
+          "name" : "elasticsearch",
+          "documents" : {
+            "successes" : 213399086
+          }
+        }, {
+          "id" : "95e681b5358d27c505a9c6de6b7b82b6ab568fc6149213cab0843528ade19baa",
+          "events" : {
+            "duration_in_millis" : 132396267,
+            "out" : 213399086,
+            "in" : 213399086
+          },
+          "flow" : {
+            "worker_millis_per_event" : {
+              "current" : 0.3925,
+              "last_1_minute" : 0.5363,
+              "last_5_minutes" : 0.7496,
+              "last_15_minutes" : 0.6663,
+              "last_1_hour" : 0.5702,
+              "last_24_hours" : 0.6081,
+              "lifetime" : 0.6204
+            },
+            "worker_utilization" : {
+              "current" : 3.996,
+              "last_1_minute" : 6.637,
+              "last_5_minutes" : 9.095,
+              "last_15_minutes" : 7.241,
+              "last_1_hour" : 6.535,
+              "last_24_hours" : 6.726,
+              "lifetime" : 5.925
+            }
+          },
+          "name" : "stdout"
+        } ]
+      },
+      "reloads" : {
+        "successes" : 0,
+        "failures" : 0,
+        "last_success_timestamp" : null,
+        "last_error" : null,
+        "last_failure_timestamp" : null
+      },
+      "queue" : {
+        "type" : "memory",
+        "events_count" : 0,
+        "queue_size_in_bytes" : 0,
+        "max_queue_size_in_bytes" : 0
+      },
+      "pipeline" : {
+        "workers" : 8,
+        "batch_size" : 500,
+        "batch_delay" : 50
+      },
+      "hash" : "49df782b103a124c00f48368d1f20335a40ee8e9ce541832a1c298abdc98f24e",
+      "ephemeral_id" : "305164e4-c9a3-4a1f-9c16-7491439d2b5d"
+    }
+  }
+}
