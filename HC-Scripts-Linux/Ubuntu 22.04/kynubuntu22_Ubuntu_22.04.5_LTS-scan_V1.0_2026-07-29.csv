@@ -1,0 +1,243 @@
+FQDN:kynubuntu22 ,,,,
+ACCOUNT:Oxxo ,,,,
+ACCOUNT BAMID:29072026 ,,,,
+CIS Benchmark Version: 3.0.0 ,,,,
+Scan Date: 2026-07-29 ,,,,
+Time-Stamp: 17:05:13,,,,
+IP-ADDRESS:172.25.28.123/20 ,,,,
+OS-NAME: Ubuntu_22.04.5_LTS ,,,,
+Scan Version: V1.0,,,,
+********************************************************,,,,
+SECTION-ID,SECTION-HEADING,SYSTEM-VALUE/PARAMETER,CURRENT-VALUE,TEST-RESULT
+1.1.1.1,Initial Setup / Configure Filesystem Kernel Modules,Ensure cramfs kernel module is not available.,cramfs kernel module is available or loadable.,No
+1.1.1.2,Initial Setup / Configure Filesystem Kernel Modules,Ensure freevxfs kernel module is not available.,freevxfs kernel module is available or loadable.,No
+1.1.1.3,Initial Setup / Configure Filesystem Kernel Modules,Ensure hfs kernel module is not available.,hfs kernel module is available or loadable.,No
+1.1.1.4,Initial Setup / Configure Filesystem Kernel Modules,Ensure hfsplus kernel module is not available.,hfsplus kernel module is available or loadable.,No
+1.1.1.5,Initial Setup / Configure Filesystem Kernel Modules,Ensure jffs2 kernel module is not available.,jffs2 kernel module is available or loadable.,No
+1.1.1.9,Initial Setup / Configure Filesystem Kernel Modules,Ensure usb-storage kernel module is not available.,usb-storage kernel module is available or loadable.,No
+1.1.1.11,Initial Setup / Configure Filesystem Kernel Modules,Ensure firewire-core kernel module is not available.,firewire-core kernel module is available or loadable.,No
+1.1.2.1.1,Initial Setup / Configure Filesystem Partitions,Ensure /tmp is tmpfs or a separate partition., /tmp is mounted. tmp.mount status: generated.,Yes
+1.1.2.1.2,Initial Setup / Configure Filesystem Partitions,Ensure nodev option set on /tmp partition.,nodev option is not set for /tmp mount.,No
+1.1.2.1.3,Initial Setup / Configure Filesystem Partitions,Ensure nosuid option set on /tmp partition.,nosuid option is not set for /tmp mount.,No
+1.1.2.1.4,Initial Setup / Configure Filesystem Partitions,Ensure noexec option set on /tmp partition.,noexec option is not set for /tmp mount.,No
+1.1.2.2.1,Initial Setup / Configure Filesystem Partitions,Ensure /dev/shm is tmpfs or a separate partition.,/dev/shm is mounted as tmpfs.,Yes
+1.1.2.2.2,Initial Setup / Configure Filesystem Kernel Modules,Ensure nodev option set on /dev/shm partition.,nodev option is set for /dev/shm mount.,Yes
+1.1.2.2.3,Initial Setup / Configure Filesystem Kernel Modules,Ensure nosuid option set on /dev/shm partition.,nosuid option is set for /dev/shm mount.,Yes
+1.1.2.2.4,Initial Setup / Configure Filesystem Kernel Modules,Ensure noexec option set on /dev/shm partition.,noexec option is not set for /dev/shm mount.,No
+1.1.2.3.2,Initial Setup / Configure Filesystem Partitions,Ensure nodev option set on /home partition.,nodev option is not set for /home mount.,No
+1.1.2.3.3,Initial Setup / Configure Filesystem Partitions,Ensure nosuid option set on /home partition.,nosuid option is not set for /home mount.,No
+1.1.2.4.2,Initial Setup / Configure Filesystem Partitions,Ensure nodev option set on /var partition.,nodev option is not set for /var mount.,No
+1.1.2.4.3,Initial Setup / Configure Filesystem Partitions,Ensure nosuid option set on /var partition.,nosuid option is not set for /var mount.,No
+1.1.2.5.2,Initial Setup / Configure Filesystem Partitions,Ensure nodev option set on /var/tmp partition.,nodev option is not set for /var/tmp mount.,No
+1.1.2.5.3,Initial Setup / Configure Filesystem Partitions,Ensure nosuid option set on /var/tmp partition.,nosuid option is not set for /var/tmp mount.,No
+1.1.2.5.4,Initial Setup / Configure Filesystem Partitions,Ensure noexec option set on /var/tmp partition.,noexec option is not set for /var/tmp mount.,No
+1.1.2.6.2,Initial Setup / Configure Filesystem Partitions,Ensure nodev option set on /var/log partition.,nodev option is not set for /var/log mount.,No
+1.1.2.6.3,Initial Setup / Configure Filesystem Partitions,Ensure nosuid option set on /var/log partition.,nosuid option is not set for /var/log mount.,No
+1.1.2.6.4,Initial Setup / Configure Filesystem Partitions,Ensure noexec option set on /var/log partition.,noexec option is not set for /var/log mount.,No
+1.1.2.7.2,Initial Setup / Configure Filesystem Partitions,Ensure nodev option set on /var/log/audit partition.,nodev option is not set on /var/log/audit.,No
+1.1.2.7.3,Initial Setup / Configure Filesystem Partitions,Ensure nosuid option set on /var/log/audit partition.,nosuid option is not set on /var/log/audit.,No
+1.1.2.7.4,Initial Setup / Configure Filesystem Partitions,Ensure noexec option set on /var/log/audit partition.,noexec option is not set on /var/log/audit.,No
+1.3.1.1,Initial Setup / Mandatory Access Control,Ensure the apparmor packages are installed., apparmor-utils is NOT installed.,No
+1.3.1.2,Initial Setup / Mandatory Access Control,Ensure AppArmor is enabled in the bootloader configuration.,apparmor=0 not found in grub config - AppArmor is enabled.,Yes
+1.3.1.3,Initial Setup / Mandatory Access Control,Ensure all AppArmor Profiles are not disabled., Profiles loaded: 40. No unconfined processes found.,Yes
+1.4.1,Secure Initial Setup / Configure Bootloader,Ensure bootloader password is set.,Superuser not found in bootloader file /boot/grub/grub.cfg.,No
+1.4.2,Initial Setup / Configure Bootloader,Ensure access to bootloader config is configured., Permissions on /boot/grub/grub.cfg are 644 (should be 0600 or more restrictive).,No
+1.5.1,Initial Setup / Configure Additional Process Hardening,Ensure randomize_va_space is configured., kernel.randomize_va_space = 2 not found in any sysctl conf file.,No
+1.5.2,Initial Setup / Configure Additional Process Hardening,Ensure ptrace_scope is configured., kernel.yama.ptrace_scope is set to 1 in running config. kernel.yama.ptrace_scope found in sysctl conf: /etc/sysctl.d/10-ptrace.conf:kernel.yama.ptrace_scope = 1,Yes
+1.5.3,Initial Setup / Configure Additional Process Hardening,Ensure suid_dumpable is configured., fs.suid_dumpable is set to 2 in running config (expected 0). fs.suid_dumpable = 0 not found in any sysctl conf file.,No
+1.5.4,Initial Setup / Configure Additional Process Hardening,Ensure core file size is configured., No hard core limit found in /etc/security/limits.conf or limits.d/.,No
+1.5.5,Initial Setup / Configure Additional Process Hardening,Ensure prelink is not installed.,prelink is not installed.,Yes
+1.5.6,Initial Setup / Configure Additional Process Hardening,Ensure Automatic Error Reporting is configured., apport is enabled in /etc/default/apport: enabled=1 apport.service is active.,No
+1.6.1,Initial Setup / Configure Command Line Warning Banners,Ensure /etc/motd is configured.,No MOTD files found - conforms to local site policy.,Yes
+1.6.2,Initial Setup / Configure Command Line Warning Banners,Ensure /etc/issue is configured., /etc/issue includes system information.,No
+1.6.3,Initial Setup / Configure Command Line Warning Banners,Ensure /etc/issue.net is configured., /etc/issue.net includes system information.,No
+1.6.4,Initial Setup / Configure Command Line Warning Banners,Ensure access to /etc/motd is configured.,/etc/motd does not exist - no access configuration required.,Yes
+1.6.5,Initial Setup / Configure Command Line Warning Banners,Ensure access to /etc/issue is configured., Permissions on /etc/issue are 644 (0644 or more restrictive). Owned by root:root.,Yes
+1.6.6,Initial Setup / Configure Command Line Warning Banners,Ensure access to /etc/issue.net is configured., Permissions on /etc/issue.net are 644 (0644 or more restrictive). Owned by root:root.,Yes
+1.7.2,Initial Setup / Configure GNOME Display Manager,Ensure GDM login banner is configured,GNOME Display Manager (GDM) is not installed. Control is Not Applicable,Not Applicable
+1.7.3,Initial Setup / Configure GNOME Display Manager,Ensure GDM disable-user-list option is enabled,GNOME Display Manager (GDM) is not installed. Control is Not Applicable,Not Applicable
+1.7.4,Initial Setup / Configure GNOME Display Manager,Ensure GDM screen locks when the user is idle,GNOME Display Manager (GDM) is not installed. Control is Not Applicable,Not Applicable
+1.7.5,Initial Setup / Configure GNOME Display Manager,Ensure GDM screen locks cannot be overridden,GNOME Display Manager (GDM) is not installed. Control is Not Applicable,Not Applicable
+1.7.6,Initial Setup / Configure GNOME Display Manager,Ensure GDM automatic mounting of removable media is disabled,GNOME Display Manager (GDM) is not installed. Control is Not Applicable,Not Applicable
+1.7.7,Initial Setup / Configure GNOME Display Manager,Ensure GDM disabling automatic mounting of removable media is not overridden,GNOME Display Manager (GDM) is not installed. Control is Not Applicable,Not Applicable
+1.7.8,Initial Setup / Configure GNOME Display Manager,Ensure GDM autorun-never is enabled,GNOME Display Manager (GDM) is not installed. Control is Not Applicable,Not Applicable
+1.7.9,Initial Setup / Configure GNOME Display Manager,Ensure GDM autorun-never is not overridden,GNOME Display Manager (GDM) is not installed. Control is Not Applicable,Not Applicable
+1.7.10,Initial Setup / Configure GNOME Display Manager,Ensure XDMCP is not enabled,GNOME Display Manager (GDM) is not installed. Control is Not Applicable.,Not Applicable
+2.1.1,Services / Configure Server Services,Ensure autofs services are not in use.,autofs package is not installed.,Yes
+2.1.2,Services / Configure Server Services,Ensure avahi daemon services are not in use.,avahi-daemon package is not installed.,Yes
+2.1.3,Services / Configure Server Services,Ensure dhcp server services are not in use.,isc-dhcp-server package is not installed.,Yes
+2.1.4,Services / Configure Server Services,Ensure dns server services are not in use., bind9 package is not installed.,Yes
+2.1.5,Services / Configure Server Services,Ensure dnsmasq services are not in use., dnsmasq package is not installed.,Yes
+2.1.6,Services / Configure Server Services,Ensure ftp server services are not in use., vsftpd.service is not enabled. vsftpd.service is not active.,Yes
+2.1.7,Services / Configure Server Services,Ensure ldap server services are not in use., slapd package is not installed.,Yes
+2.1.8,Services / Configure Server Services,Ensure message access server services are not in use., dovecot-imapd and dovecot-pop3d packages are not installed.,Yes
+2.1.9,Services / Configure Server Services,Ensure network file system services are not in use., nfs-kernel-server package is not installed.,Yes
+2.1.10,Services / Configure Server Services,Ensure nis server services are not in use., ypserv package is not installed.,Yes
+2.1.11,Services / Configure Server Services,Ensure print server services are not in use., cups package is not installed.,Yes
+2.1.12,Services / Configure Server Services,Ensure rpcbind services are not in use., rpcbind package is not installed.,Yes
+2.1.13,Services / Configure Server Services,Ensure rsync services are not in use., rsync.service is not enabled. rsync.service is not active.,Yes
+2.1.14,Services / Configure Server Services,Ensure samba file server services are not in use., samba package is not installed.,Yes
+2.1.15,Services / Configure Server Services,Ensure snmp services are not in use., snmpd package is not installed.,Yes
+2.1.16,Services / Configure Server Services,Ensure tftp server services are not in use., tftpd-hpa package is not installed.,Yes
+2.1.17,Services / Configure Server Services,Ensure web proxy server services are not in use., squid package is not installed.,Yes
+2.1.18,Services / Configure Server Services,Ensure web server services are not in use., apache2 package is not installed. nginx package is not installed.,Yes
+2.1.19,Services / Configure Server Services,Ensure xinetd services are not in use., xinetd package is not installed.,Yes
+2.1.21,Services / Configure Server Services,Ensure mail transfer agents are configured for local-only mode.,"MTA is configured for local-only mode.  - Port ""25"" is not listening on a non-loopback network interface  - Port ""465"" is not listening on a non-loopback network interface  - Port ""587"" is not listening on a non-loopback network interface  - MTA not detected or in use",Yes
+2.2.1,Services / Configure Client Services,Ensure NIS Client is not installed.,Compliant: NIS client (nis) package is not installed.,Yes
+2.2.2,Services / Configure Client Services,Ensure rsh client is not installed.,Compliant: rsh client (rsh-client) package is not installed.,Yes
+2.2.3,Services / Configure Client Services,Ensure talk client is not installed.,talk client service is not installed.,Yes
+2.2.4,Services / Configure Client Services,Ensure telnet client is not installed.,telnet client service is installed.,No
+2.2.5,Services / Configure Client Services,Ensure LDAP client is not installed.,LDAP client service is not installed.,Yes
+2.2.6,Services / Configure Client Services,Ensure ftp client is not installed., ftp/tnftp client is installed.,No
+2.3.1.1,Services / Configure Time Synchronization,Ensure a single time synchronization daemon is in use.,single time synchronization daemon is in use.,Yes
+2.3.2.1,Services / Configure Time Synchronization,Ensure systemd-timesyncd configured with authorized timeserver., NTP is not configured in /etc/systemd/timesyncd.conf. FallbackNTP is not configured in /etc/systemd/timesyncd.conf.,No
+2.3.2.2,Services / Configure Time Synchronization,Ensure systemd-timesyncd is enabled and running.,systemd-timesyncd is enabled and running.,Yes
+2.3.3.1,Services / Configure Time Synchronization,Ensure chrony is configured with authorized timeserver., No server or pool directive found in /etc/chrony/chrony.conf.,No
+2.3.3.2,Services / Configure Time Synchronization,Ensure chrony is running as user _chrony.,chrony is running as user _chrony.,Yes
+2.3.3.3,Services / Configure Time Synchronization,Ensure chrony is enabled and running.,chrony is Not enabled or running.Please check..,No
+2.4.1.1,Services / Job Schedulers,Ensure cron daemon is enabled and active., cron is enabled. cron is active.,Yes
+2.4.1.2,Services / Job Schedulers,Ensure permissions on /etc/crontab are configured.,Permissions on /etc/crontab are NOT configured correctly.  /etc/crontab mode is 0644 (required: 0600 or more restrictive).,No
+2.4.1.3,Services / Job Schedulers,Ensure permissions on /etc/cron.hourly are configured.,Permissions on /etc/cron.hourly are NOT configured correctly.  /etc/cron.hourly mode is 0755 (required: 0700).,No
+2.4.1.4,Services / Job Schedulers,Ensure permissions on /etc/cron.daily are configured.,Permissions on /etc/cron.daily are NOT configured correctly.  /etc/cron.daily mode is 0755 (required: 0700).,No
+2.4.1.5,Services / Job Schedulers,Ensure permissions on /etc/cron.weekly are configured.,Permissions on /etc/cron.weekly/ are NOT configured correctly.  /etc/cron.weekly mode is 0755 (required: 0700).,No
+2.4.1.6,Services / Job Schedulers,Ensure permissions on /etc/cron.monthly are configured.,Permissions on /etc/cron.monthly are NOT configured correctly.  /etc/cron.monthly mode is 0755 (required: 0700).,No
+2.4.1.7,Services / Job Schedulers,Ensure access to /etc/cron.yearly is configured.,/etc/cron.yearly does not exist. Not applicable.,Yes
+2.4.1.8,Services / Job Schedulers,Ensure permissions on /etc/cron.d are configured.,Permissions on /etc/cron.d/ are NOT configured correctly.  /etc/cron.d mode is 0755 (required: 0700).,No
+2.4.1.9,Services / Job Schedulers,Ensure cron is restricted to authorized users., File /etc/cron.allow does not exist. Required: must exist.,No
+2.4.2.1,Services / Job Schedulers,Ensure access to at is configured., /etc/at.allow does not exist.,No
+3.1.2,Network / Configure Network Devices,Ensure wireless interfaces are not available.,System has no wireless NICs installed.,Yes
+3.1.3,Network / Configure Network Devices,Ensure bluetooth services are not in use.,bluez package is not installed (compliant).,Yes
+3.2.1,Network Configuration / Configure Network Kernel Modules,Ensure dccp kernel module is not available.,dccp kernel module is available or loadable.,No
+3.2.2,Network Configuration / Configure Network Kernel Modules,Ensure tipc kernel module is not available.,tipc kernel module is available or loadable.,No
+3.2.3,Network Configuration / Configure Network Kernel Modules,Ensure rds kernel module is not available.,rds kernel module is available or loadable.,No
+3.2.4,Network Configuration / Configure Network Kernel Modules,Ensure sctp kernel module is not available.,sctp kernel module is available or loadable.,No
+3.3.1.2,Network Configuration / Network Kernel Parameters,Ensure net.ipv4.conf.all.forwarding is configured., net.ipv4.conf.all.forwarding = 0 not found in any sysctl conf file.,No
+3.3.1.3,Network Configuration / Network Kernel Parameters,Ensure net.ipv4.conf.default.forwarding is configured., net.ipv4.conf.default.forwarding = 0 not found in any sysctl conf file.,No
+3.3.1.4,Network Configuration / Network Kernel Parameters,Ensure net.ipv4.conf.all.send_redirects is configured., net.ipv4.conf.all.send_redirects is set to 1 in running config (expected 0). net.ipv4.conf.all.send_redirects = 0 not found in any sysctl conf file.,No
+3.3.1.5,Network Configuration / Network Kernel Parameters,Ensure net.ipv4.conf.default.send_redirects is configured., net.ipv4.conf.default.send_redirects is set to 1 in running config (expected 0). net.ipv4.conf.default.send_redirects = 0 not found in any sysctl conf file.,No
+3.3.1.6,Network Configuration / Network Kernel Parameters,Ensure net.ipv4.icmp_ignore_bogus_error_responses is configured., net.ipv4.icmp_ignore_bogus_error_responses = 1 not found in any sysctl conf file.,No
+3.3.1.7,Network Configuration / Network Kernel Parameters,Ensure net.ipv4.icmp_echo_ignore_broadcasts is configured., net.ipv4.icmp_echo_ignore_broadcasts = 1 not found in any sysctl conf file.,No
+3.3.1.8,Network Configuration / Network Kernel Parameters,Ensure net.ipv4.conf.all.accept_redirects is configured., net.ipv4.conf.all.accept_redirects is set to 1 in running config (expected 0). net.ipv4.conf.all.accept_redirects = 0 not found in any sysctl conf file.,No
+3.3.1.9,Network Configuration / Network Kernel Parameters,Ensure net.ipv4.conf.default.accept_redirects is configured., net.ipv4.conf.default.accept_redirects is set to 1 in running config (expected 0). net.ipv4.conf.default.accept_redirects = 0 not found in any sysctl conf file.,No
+3.3.1.10,Network Configuration / Network Kernel Parameters,Ensure net.ipv4.conf.all.secure_redirects is configured., net.ipv4.conf.all.secure_redirects is set to 1 in running config (expected 0). net.ipv4.conf.all.secure_redirects = 0 not found in any sysctl conf file.,No
+3.3.1.11,Network Configuration / Network Kernel Parameters,Ensure net.ipv4.conf.default.secure_redirects is configured., net.ipv4.conf.default.secure_redirects is set to 1 in running config (expected 0). net.ipv4.conf.default.secure_redirects = 0 not found in any sysctl conf file.,No
+3.3.1.12,Network Configuration / Network Kernel Parameters,Ensure net.ipv4.conf.all.rp_filter is configured., net.ipv4.conf.all.rp_filter is set to 2 in running config (expected 1). net.ipv4.conf.all.rp_filter = 1 not found in any sysctl conf file.,No
+3.3.1.13,Network Configuration / Network Kernel Parameters,Ensure net.ipv4.conf.default.rp_filter is configured., net.ipv4.conf.default.rp_filter is set to 2 in running config (expected 1). net.ipv4.conf.default.rp_filter = 1 not found in any sysctl conf file.,No
+3.3.1.14,Network Configuration / Network Kernel Parameters,Ensure net.ipv4.conf.all.accept_source_route is configured., net.ipv4.conf.all.accept_source_route = 0 not found in any sysctl conf file.,No
+3.3.1.15,Network Configuration / Network Kernel Parameters,Ensure net.ipv4.conf.default.accept_source_route is configured., net.ipv4.conf.default.accept_source_route is set to 0 in running config. net.ipv4.conf.default.accept_source_route = 0 found in sysctl conf.,Yes
+3.3.1.16,Network Configuration / Network Kernel Parameters,Ensure net.ipv4.conf.all.log_martians is configured., net.ipv4.conf.all.log_martians is set to 0 in running config (expected 1). net.ipv4.conf.all.log_martians = 1 not found in any sysctl conf file.,No
+3.3.1.17,Network Configuration / Network Kernel Parameters,Ensure net.ipv4.conf.default.log_martians is configured., net.ipv4.conf.default.log_martians is set to 0 in running config (expected 1). net.ipv4.conf.default.log_martians = 1 not found in any sysctl conf file.,No
+3.3.1.18,Network Configuration / Network Kernel Parameters,Ensure net.ipv4.tcp_syncookies is configured., net.ipv4.tcp_syncookies = 1 not found in any sysctl conf file.,No
+3.3.2.1,Network Configuration / Network Kernel Parameters,Ensure net.ipv6.conf.all.forwarding is configured., net.ipv6.conf.all.forwarding=0 not found in any sysctl configuration file. ,No
+3.3.2.2,Network Configuration / Network Kernel Parameters,Ensure net.ipv6.conf.default.forwarding is configured., net.ipv6.conf.default.forwarding=0 not found in any sysctl configuration file. ,No
+3.3.2.3,Network Configuration / Network Kernel Parameters,Ensure net.ipv6.conf.all.accept_redirects is configured., net.ipv6.conf.all.accept_redirects is set to 1 in running configuration (expected 0). net.ipv6.conf.all.accept_redirects=0 not found in any sysctl configuration file. ,No
+3.3.2.4,Network Configuration / Network Kernel Parameters,Ensure net.ipv6.conf.default.accept_redirects is configured., net.ipv6.conf.default.accept_redirects is set to 1 in running configuration (expected 0). net.ipv6.conf.default.accept_redirects=0 not found in any sysctl configuration file. ,No
+3.3.2.5,Network Configuration / Network Kernel Parameters,Ensure net.ipv6.conf.all.accept_source_route is configured., net.ipv6.conf.all.accept_source_route=0 not found in any sysctl configuration file. ,No
+3.3.2.6,Network Configuration / Network Kernel Parameters,Ensure net.ipv6.conf.default.accept_source_route is configured., net.ipv6.conf.default.accept_source_route=0 not found in any sysctl configuration file. ,No
+3.3.2.7,Network Configuration / Network Kernel Parameters,Ensure net.ipv6.conf.all.accept_ra is configured., net.ipv6.conf.all.accept_ra is set to 1 in running configuration (expected 0). net.ipv6.conf.all.accept_ra=0 not found in any sysctl configuration file. ,No
+3.3.2.8,Network Configuration / Network Kernel Parameters,Ensure net.ipv6.conf.default.accept_ra is configured., net.ipv6.conf.default.accept_ra is set to 1 in running configuration (expected 0). net.ipv6.conf.default.accept_ra=0 not found in any sysctl configuration file. ,No
+4.1.1,Host Based Firewall / Configure Uncomplicated Firewall,Ensure ufw is installed.,ufw is installed.,Yes
+4.1.2,Host Based Firewall / Configure Uncomplicated Firewall,Ensure ufw service is configured., ufw status is not active.,No
+4.1.3,Host Based Firewall / Configure Uncomplicated Firewall,Ensure ufw incoming default is configured.," ufw default incoming policy is set to """" (expected: deny or reject).",No
+4.1.5,Host Based Firewall / Configure Uncomplicated Firewall,Ensure ufw routed default is configured.," ufw default routed policy is set to """" (expected: disabled or deny).",No
+5.1.1,Access Control / Configure SSH Server,Ensure access to /etc/ssh/sshd_config is configured.," File: ""/etc/ssh/sshd_config"" mode ""644"" should be 600 or more restrictive. File: ""/etc/ssh/sshd_config.d/50-cloud-init.conf"" mode ""644"" should be 600 or more restrictive. ",No
+5.1.2,Access Control / Configure SSH Server,Ensure access to SSH private host key files is configured.,SSH private host key files are NOT configured correctly.  ,No
+5.1.3,Access Control / Configure SSH Server,Ensure access to SSH public host key files is configured.,SSH public host key files are NOT configured correctly.  ,No
+5.1.4,Access Control / Configure SSH Server,Ensure sshd access is configured.,No AllowUsers/AllowGroups/DenyUsers/DenyGroups configured in sshd.,No
+5.1.5,Access Control / Configure SSH Server,Ensure sshd Banner is configured., sshd Banner is not set or set to none.,No
+5.1.6,Access Control / Configure SSH Server,Ensure sshd Ciphers are configured., Weak cipher(s) found in sshd config: chacha20-poly1305@openssh.com,No
+5.1.7,Access Control / Configure SSH Server,Ensure sshd ClientAliveInterval and ClientAliveCountMax are configured.," ClientAliveInterval is set to ""0"" - must be greater than 0.",No
+5.1.10,Access Control / Configure SSH Server,Ensure sshd HostbasedAuthentication is disabled., HostbasedAuthentication is set to no in sshd running config.,Yes
+5.1.11,Access Control / Configure SSH Server,Ensure sshd IgnoreRhosts is enabled., IgnoreRhosts is set to yes in sshd running config.,Yes
+5.1.12,Access Control / Configure SSH Server,Ensure sshd KexAlgorithms is configured.,No weak KexAlgorithms found. Current Value: curve25519-sha256;curve25519-sha256@libssh.org;ecdh-sha2-nistp256;ecdh-sha2-nistp384;ecdh-sha2-nistp521;sntrup761x25519-sha512@openssh.com;diffie-hellman-group-exchange-sha256;diffie-hellman-group16-sha512;diffie-hellman-group18-sha512;diffie-hellman-group14-sha256 ,Yes
+5.1.13,Access Control / Configure SSH Server,Ensure sshd LoginGraceTime is configured.," LoginGraceTime is set to ""120"" - must be between 1 and 60 seconds per CIS.",No
+5.1.14,Access Control / Configure SSH Server,Ensure sshd LogLevel is configured.," LogLevel is set to ""INFO"" which is acceptable (VERBOSE or INFO required).",Yes
+5.1.15,Access Control / Configure SSH Server,Ensure sshd MACs are configured., Weak MAC(s) found in sshd config: umac-64-etm@openssh.com umac-128-etm@openssh.com hmac-sha1-etm@openssh.com umac-64@openssh.com umac-128@openssh.com,No
+5.1.16,Access Control / Configure SSH Server,Ensure sshd MaxAuthTries is configured.," MaxAuthTries is set to ""6"" - must be 4 or less per CIS.",No
+5.1.17,Access Control / Configure SSH Server,Ensure sshd MaxSessions is configured., MaxSessions is set to 10 (10 or less - compliant).,Yes
+5.1.18,Access Control / Configure SSH Server,Ensure sshd MaxStartups is configured.,MaxStartups is set to 10:30:100 - must be 10:30:60 or more restrictive per CIS (start<=10 rate<=30 full<=60). ,No
+5.1.19,Access Control / Configure SSH Server,Ensure sshd PermitEmptyPasswords is disabled., PermitEmptyPasswords is set to no (compliant).,Yes
+5.1.20,Access Control / Configure SSH Server,Ensure sshd PermitRootLogin is disabled.,PermitRootLogin is set to yes - NON COMPLIANT. Must be set to no or prohibit-password or forced-commands-only per CIS ,No
+5.1.21,Access Control / Configure SSH Server,Ensure sshd PermitUserEnvironment is disabled., PermitUserEnvironment is set to no (compliant).,Yes
+5.1.22,Access Control / Configure SSH Server,Ensure sshd UsePAM is enabled., UsePAM is set to yes (compliant).,Yes
+5.2.1,Access Control / Configure privilege escalation,Ensure sudo is installed.,sudo is installed.,Yes
+5.2.2,Access Control / Configure privilege escalation,Ensure sudo commands use pty.,sudo commands use pty.,Yes
+5.2.3,Access Control / Configure privilege escalation,Ensure sudo log file exists.,sudo log file NOT configured.,No
+5.2.5,Access Control / Configure privilege escalation,Ensure re-authentication for privilege escalation is not disabled globally.,re-authentication for privilege escalation is disabled globally.,Yes
+5.2.6,Access Control / Configure privilege escalation,Ensure sudo timestamp_timeout is configured., timestamp_timeout is not explicitly configured - system default is 15.0 minutes which is compliant per CIS.,Yes
+5.2.7,Access Control / Configure privilege escalation,Ensure access to the su command is restricted.,access to the su command is NOT restricted.,No
+5.3.1.1,Access Control / Configure PAM,Ensure latest version of pam is installed., libpam-runtime is installed and at the latest available version (version: 1.4.0-11ubuntu2.6).,Yes
+5.3.1.2,Access Control / Configure PAM,Ensure latest version of libpam-modules is installed., libpam-modules is installed and at the latest available version (version: 1.4.0-11ubuntu2.6).,Yes
+5.3.1.3,Access Control / Configure PAM,Ensure latest version of libpam-pwquality is installed., libpam-pwquality is not installed.,No
+5.3.2.1,Access Control / Configure PAM,Ensure pam_unix module is enabled., pam_unix.so is enabled in /etc/pam.d/common-account. pam_unix.so is enabled in /etc/pam.d/common-auth. pam_unix.so is enabled in /etc/pam.d/common-password. pam_unix.so is enabled in /etc/pam.d/common-session. pam_unix.so is enabled in /etc/pam.d/common-session-noninteractive.,Yes
+5.3.2.2,Access Control / Configure PAM,Ensure pam_faillock module is enabled., pam_faillock.so preauth (requisite) is NOT configured in /etc/pam.d/common-auth. pam_faillock.so authfail ([default=die]) is NOT configured in /etc/pam.d/common-auth. pam_faillock.so (required) is NOT configured in /etc/pam.d/common-account.,No
+5.3.2.3,Access Control / Configure PAM,Ensure pam_pwquality module is enabled., pam_pwquality.so (requisite) is NOT configured in /etc/pam.d/common-password.,No
+5.3.2.4,Access Control / Configure PAM,Ensure pam_pwhistory module is enabled., pam_pwhistory.so (requisite) is NOT configured in /etc/pam.d/common-password.,No
+5.3.3.1.1,Access Control / Configure PAM,Ensure password failed attempts lockout is configured., deny is not explicitly set in /etc/security/faillock.conf - default is 3 which is compliant per CIS.,Yes
+5.3.3.1.2,Access Control / Configure PAM,Ensure password unlock time is configured., unlock_time is not explicitly configured in /etc/security/faillock.conf - default is 600 seconds which does not meet CIS requirement of 0 (never) or 900 or more seconds.,No
+5.3.3.2.1,Access Control / Configure PAM,Ensure password number of changed characters is configured., difok is not explicitly configured (default: 1). Required: 2 or more.,No
+5.3.3.2.2,Access Control / Configure PAM,Ensure minimum password length is configured., minlen is not explicitly configured (default: 8). Required: 14 or more.,No
+5.3.3.2.4,Access Control / Configure PAM,Ensure password same consecutive characters is configured., maxrepeat is not configured (default: 0 = disabled). Required: 1-3.,No
+5.3.3.2.5,Access Control / Configure PAM,Ensure password maximum sequential characters is configured., maxsequence is not configured (default: 0 = disabled). Required: 1-3.,No
+5.3.3.2.6,Access Control / Configure PAM,Ensure password dictionary check is enabled.,dictcheck is not explicitly configured (default: 1 = enabled - compliant).,Yes
+5.3.3.2.7,Access Control / Configure PAM,Ensure password quality checking is enforced.,enforcing is not explicitly configured (default: 1 = enabled - compliant).,Yes
+5.3.3.2.8,Access Control / Configure PAM,Ensure password quality is enforced for the root user., enforce_for_root is not configured in pwquality config. Required: enforce_for_root must be set.,No
+5.3.3.3.1,Access Control / Configure PAM,Ensure password history remember is configured., remember is not configured in pam_pwhistory line in /etc/pam.d/common-password. Required: 24 or more.,No
+5.3.3.3.2,Access Control / Configure PAM,Ensure password history is enforced for the root user., enforce_for_root is not set on pam_pwhistory line in /etc/pam.d/common-password. Required: enforce_for_root must be present.,No
+5.3.3.3.3,Access Control / Configure PAM,Ensure pam_pwhistory includes use_authtok., use_authtok is not set on pam_pwhistory line in /etc/pam.d/common-password. Required: use_authtok must be present.,No
+5.3.3.4.1,Access Control / Configure PAM,Ensure pam_unix module does not include nullok.,Non-compliant: pam_unix.so includes nullok option.,No
+5.3.3.4.2,Access Control / Configure PAM,Ensure pam_unix does not include remember.,pam_unix.so does not include remember in any PAM file.,Yes
+5.3.3.4.3,Access Control / Configure PAM,Ensure pam_unix includes a strong password hashing algorithm.,pam_unix.so is using strong hashing algorithm: yescrypt (compliant).,Yes
+5.3.3.4.4,Access Control / Configure PAM,Ensure pam_unix includes use_authtok.,pam_unix.so does not include use_authtok on password line in /etc/pam.d/common-password. Required: use_authtok must be present.,No
+5.4.1.1,Access Control / User Accounts and Environment,Ensure password expiration is configured., PASS_MAX_DAYS is set to 99999 in /etc/login.defs. Required: 1-365. User root has PASS_MAX_DAYS=99999 (exceeds 365). User sailen has PASS_MAX_DAYS=99999 (exceeds 365).,No
+5.4.1.3,Access Control / User Accounts and Environment,Ensure password expiration warning days is configured., PASS_WARN_AGE is set to 7 in /etc/login.defs (compliant).,Yes
+5.4.1.4,Access Control / User Accounts and Environment,Ensure strong password hashing algorithm is configured.,ENCRYPT_METHOD is set to SHA512 in /etc/login.defs (compliant).,Yes
+5.4.1.5,Access Control / User Accounts and Environment,Ensure inactive password lock is configured., Default INACTIVE is set to -1 (disabled). Required: 1-45. User root has INACTIVE=-1 (disabled). Required: 1-45. User sailen has INACTIVE=-1 (disabled). Required: 1-45.,No
+5.4.1.6,Access Control / User Accounts and Environment,Ensure all users last password change date is in the past.,All users' last password change date is in the past.,Yes
+5.4.2.1,Access Control / User Accounts and Environment,Ensure root is the only UID 0 account.,Root is the only UID 0 account.,Yes
+5.4.2.2,Access Control / User Accounts and Environment,Ensure root is the only GID 0 account.,root is the only account with GID 0.,Yes
+5.4.2.3,Access Control / User Accounts and Environment,Ensure group root is the only GID 0 group.,root is the only group with GID 0.,Yes
+5.4.2.4,Access Control / User Accounts and Environment,Ensure root account access is controlled.,root account has a password set (status: P - compliant).,Yes
+5.4.2.5,Access Control / User Accounts and Environment,Ensure root PATH Integrity.,root PATH Integrity is valid.,Yes
+5.4.2.6,Access Control / User Accounts and Environment,Ensure root user umask is configured.,No permissive umask found in /root/.profile or /root/.bashrc.,Yes
+5.4.2.7,Access Control / User Accounts and Environment,Ensure system accounts do not have a valid login shell.,No system accounts found with a valid login shell.,Yes
+5.4.2.8,Access Control / User Accounts and Environment,Ensure accounts without a valid login shell are locked.,All non-root accounts without a valid login shell are locked.,Yes
+5.4.3.2,Access Control / User Accounts and Environment,Ensure default user shell timeout is configured., TMOUT value (1-900) is not set in any shell config file. TMOUT is not set as readonly in any shell config file. TMOUT is not exported in any shell config file.,No
+5.4.3.3,Access Control / User Accounts and Environment,Ensure default user umask is configured., UMASK in /etc/login.defs: 022. Required: 027 or more restrictive.,No
+6.1.1.1.1,Logging and Auditing / System Logging,Ensure journald service is active.,systemd-journald.service is active (running).,Yes
+6.1.1.1.4,Logging and Auditing / System Logging,Ensure journald ForwardToSyslog is disabled.,ForwardToSyslog is not set (default: no - compliant).,Yes
+6.1.1.1.5,Logging and Auditing / System Logging,Ensure journald Storage is configured.,Storage is not configured in journald config. Required: Storage=persistent.,No
+6.1.1.1.6,Logging and Auditing / System Logging,Ensure journald Compress is configured.,Compress is not configured in journald config. Required: Compress=yes.,No
+6.1.1.2.1,Logging and Auditing / System Logging,Ensure systemd-journal-remote is installed.,systemd-journal-remote package is not installed (status: not found).,No
+6.1.1.2.3,Logging and Auditing / System Logging,Ensure systemd-journal-upload is enabled and active., systemd-journal-upload.service is not enabled. systemd-journal-upload.service is not active.,No
+6.1.1.2.4,Logging and Auditing / System Logging,Ensure systemd-journal-remote service is not in use.,systemd-journal-remote.socket and systemd-journal-remote.service are not enabled or active.,Yes
+6.1.2.1,Logging and Auditing / System Logging,Ensure rsyslog is installed.,rsyslog package is installed.,Yes
+6.1.2.2,Logging and Auditing / System Logging,Ensure rsyslog service is enabled and active., rsyslog.service is enabled. rsyslog.service is active.,Yes
+6.1.2.3,Logging and Auditing / System Logging,Ensure journald is configured to send logs to rsyslog., ForwardToSyslog is not configured in journald config. Required: ForwardToSyslog=yes.,No
+6.1.2.4,Logging and Auditing / System Logging,Ensure rsyslog log file creation mode is configured.,$FileCreateMode is configured to 0640 or more restrictive: /etc/rsyslog.conf:$FileCreateMode 0640,Yes
+6.1.2.7,Logging and Auditing / System Logging,Ensure rsyslog is not configured to receive logs from a remote client.,Rsyslog is not configured to receive logs from a remote client.,Yes
+6.1.3.1,Logging and Auditing / System Logging,Ensure access to all logfiles has been configured.,All logfiles have appropriate permissions and ownership.,Yes
+6.3.1,Logging and Auditing / Configure Integrity Checking,Ensure AIDE is installed.,AIDE is not installed.,No
+6.3.2,Logging and Auditing / Configure Integrity Checking,Ensure filesystem integrity is regularly checked.,AIDE service is not running daily to check filesystem integrity,No
+7.1.1,System Maintenance / System File Permissions,Ensure access to /etc/passwd is configured., /etc/passwd mode is 0644 (compliant). Owner is root (compliant). Group is root (compliant).,Yes
+7.1.2,System Maintenance / System File Permissions,Ensure access to /etc/passwd- is configured., /etc/passwd- mode is 0644 (compliant). Owner is root (compliant). Group is root (compliant).,Yes
+7.1.3,System Maintenance / System File Permissions,Ensure access to /etc/group is configured., /etc/group mode is 0644 (compliant). Owner is root (compliant). Group is root (compliant).,Yes
+7.1.4,System Maintenance / System File Permissions,Ensure access to /etc/group- is configured., /etc/group- mode is 0644 (compliant). Owner is root (compliant). Group is root (compliant).,Yes
+7.1.5,System Maintenance / System File Permissions,Ensure access to /etc/shadow is configured., /etc/shadow mode is 0640 (compliant). Owner is root (compliant). Group is shadow (compliant).,Yes
+7.1.6,System Maintenance / System File Permissions,Ensure access to /etc/shadow- is configured., /etc/shadow- mode is 0640 (compliant). Owner is root (compliant). Group is shadow (compliant).,Yes
+7.1.7,System Maintenance / System File Permissions,Ensure access to /etc/gshadow is configured., /etc/gshadow mode is 0640 (compliant). Owner is root (compliant). Group is shadow (compliant).,Yes
+7.1.8,System Maintenance / System File Permissions,Ensure access to /etc/gshadow- is configured., /etc/gshadow- mode is 0640 (compliant). Owner is root (compliant). Group is shadow (compliant).,Yes
+7.1.9,System Maintenance / System File Permissions,Ensure access to /etc/shells is configured., /etc/shells mode is 0644 (compliant). Owner is root (compliant). Group is root (compliant).,Yes
+7.1.10,System Maintenance / System File Permissions,Ensure access to /etc/security/opasswd is configured., /etc/security/opasswd mode is 0600 (compliant). /etc/security/opasswd owner is root (compliant). /etc/security/opasswd group is root (compliant).,Yes
+7.1.11,System Maintenance / System File Permissions,Ensure world writable files and directories are secured,No world-writable files or directories without sticky bit,Yes
+7.1.12,System Maintenance / System File Permissions,Ensure no files or directories without an owner and a group exist,All files and directories have valid owner and group,Yes
+7.2.1,System Maintenance / Local User and Group Settings,Ensure accounts in /etc/passwd use shadowed passwords.,All accounts in /etc/passwd use shadowed passwords,Yes
+7.2.2,System Maintenance / Local User and Group Settings,Ensure /etc/shadow password fields are not empty.,All accounts in /etc/shadow password fields are not empty,Yes
+7.2.3,System Maintenance / Local User and Group Settings,Ensure all groups in /etc/passwd exist in /etc/group .,All groups in /etc/passwd exist in /etc/group.,Yes
+7.2.4,System Maintenance / Local User and Group Settings,Ensure shadow group is empty.,The shadow group is empty.,Yes
+7.2.5,System Maintenance / Local User and Group Settings,Ensure no duplicate UIDs exist.,No Duplicate UIDs exists,Yes
+7.2.6,System Maintenance / Local User and Group Settings,Ensure no duplicate GIDs exist.,No duplicate GIDs found in /etc/group,Yes
+7.2.7,System Maintenance / Local User and Group Settings,Ensure no duplicate user names exist.,No duplicate login names found in /etc/passwd.,Yes
+7.2.8,System Maintenance / Local User and Group Settings,Ensure no duplicate group names exist.,No duplicate group names found in /etc/group.,Yes
+7.2.9,System Maintenance / Local User and Group Settings,Ensure local interactive user home directories are configured., User root /root: home does not exist. User sailen /home/sailen: home does not exist. ,No
+7.2.10,System Maintenance / Local User and Group Settings,Ensure local interactive user dot files access is configured.,Local interactive user dot files access is configured correctly.,Yes
