@@ -1,0 +1,13 @@
+Package Name,Target Version,CVE IDs Fixed
+"base-files","13ubuntu10.5","None"
+"byobu","6.11-0ubuntu1.1","None"
+"console-setup-linux","1.226ubuntu1.1","None"
+"console-setup","1.226ubuntu1.1","None"
+"keyboard-configuration","1.226ubuntu1.1","None"
+"libproc2-0","2:4.0.4-4ubuntu3.3","None"
+"motd-news-config","13ubuntu10.5","None"
+"procps","2:4.0.4-4ubuntu3.3","None"
+"python-apt-common","2.7.7ubuntu5.3","None"
+"python3-apt","2.7.7ubuntu5.3","None"
+"python3-distupgrade","1:24.04.29","None"
+"ubuntu-release-upgrader-core","1:24.04.29","None"
