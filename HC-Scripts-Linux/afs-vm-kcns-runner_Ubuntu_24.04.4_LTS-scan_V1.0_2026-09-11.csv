@@ -1,9 +1,9 @@
 FQDN:afs-vm-kcns-runner.wmqiacnlfwgufopvtsfcji3dyf.bx.internal.cloudapp.net 
-ACCOUNT:AFS 
-ACCOUNT BAMID:BAM0002B6B 
+ACCOUNT:test 
+ACCOUNT BAMID:12345 
 CIS Benchmark Version: 1.0.0 
 Scan Date: 2026-09-11 
-Time-Stamp: 12:19:27 
+Time-Stamp: 14:36:44 
 IP-ADDRESS:192.168.8.4/27 
 OS-NAME: Ubuntu_24.04.4_LTS 
 Scan Version: V1.0 
@@ -139,7 +139,7 @@ SECTION-ID|SECTION-HEADING|SYSTEM-VALUE/PARAMETER|CURRENT-VALUE|TEST-RESULT
 4.4.3.1|Network Configuration / Configure ip6tables|Ensure ip6tables default deny firewall policy.|IPv6 is not enabled on the system. ip6tables check not required.|Yes
 4.4.3.2|Network Configuration / Configure ip6tables|Ensure ip6tables loopback traffic is configured.|IPv6 is not enabled on the system. ip6tables loopback check not required.|Yes
 4.4.3.4|Network Configuration / Configure ip6tables|Ensure ip6tables firewall rules exist for all open ports.|IPv6 is not enabled on the system. ip6tables open ports check not required.|Yes
-5.1.1|Access Control / Configure SSH Server|Ensure permissions on /etc/ssh/sshd_config are configured| File: /etc/ssh/sshd_config.d/50-cloudimg-settings.conf: mode (0644), owner (root), group (root) - must be 0600 or more restrictive and root:root. File: /etc/ssh/sshd_config.d/60-cloudimg-settings.conf: mode (0644), owner (root), group (root) - must be 0600 or more restrictive and root:root.|No
+5.1.1|Access Control / Configure SSH Server|Ensure permissions on /etc/ssh/sshd_config are configured| File: /etc/ssh/sshd_config.d/50-cloudimg-settings.conf: mode (0644); owner (root); group (root) - must be 0600 or more restrictive and root:root. File: /etc/ssh/sshd_config.d/60-cloudimg-settings.conf: mode (0644); owner (root); group (root) - must be 0600 or more restrictive and root:root.|No
 5.1.2|Access Control / Configure SSH Server|Ensure access to SSH private host key files is configured.|SSH private host key files are configured correctly.  File: "/etc/ssh/ssh_host_ecdsa_key": Correct mode (0600) owner (root) group (root). File: "/etc/ssh/ssh_host_rsa_key": Correct mode (0600) owner (root) group (root). File: "/etc/ssh/ssh_host_ed25519_key": Correct mode (0600) owner (root) group (root).|Yes
 5.1.3|Access Control / Configure SSH Server|Ensure access to SSH public host key files is configured.|SSH public host key files are configured correctly.  File: "/etc/ssh/ssh_host_ecdsa_key.pub": Correct mode (0644)  owner (root)  group (root). File: "/etc/ssh/ssh_host_ed25519_key.pub": Correct mode (0644)  owner (root)  group (root). File: "/etc/ssh/ssh_host_rsa_key.pub": Correct mode (0644)  owner (root)  group (root).|Yes
 5.1.4|Access Control / Configure SSH Server|Ensure sshd access is configured.|No AllowUsers/AllowGroups/DenyUsers/DenyGroups configured in sshd.|No
