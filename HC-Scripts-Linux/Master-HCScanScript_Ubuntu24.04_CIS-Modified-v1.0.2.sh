@@ -1453,17 +1453,12 @@ fi
 #Ensure GDM disable-user-list option is enabled.
 {
  l_output="" l_output2=""
- l_gdm_installed="no"
 
- if dpkg-query -W -f='${Status}' gdm3 2>/dev/null | grep -q "ok installed" || \
-    dpkg-query -W -f='${Status}' gdm 2>/dev/null | grep -q "ok installed"; then
-  l_gdm_installed="yes"
- fi
-
- if [ "$l_gdm_installed" != "yes" ]; then
-  l_output="GDM package is not installed. Control is not applicable."
+ # CIS audit procedure: run the gsettings command and require the value to be true.
+ # Do not mark the control N/A solely because the GDM package is not installed.
+ if ! command -v gsettings >/dev/null 2>&1; then
+  l_output2="gsettings command is not available; unable to verify disable-user-list. CIS requires true."
  else
-  # CIS audit procedure: gsettings get org.gnome.login-screen disable-user-list
   l_value="$(gsettings get org.gnome.login-screen disable-user-list 2>/dev/null | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')"
   if [ "$l_value" = "true" ]; then
    l_output="gsettings reports org.gnome.login-screen disable-user-list = true."
