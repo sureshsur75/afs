@@ -5332,10 +5332,10 @@ done
    l_output2="$l_output2 File: "$l_file" could not be audited."
    l_pass="no"
   elif [ $((8#$l_mode & 0177)) -ne 0 ] || [ "$l_owner" != "root" ] || [ "$l_group" != "root" ]; then
-   l_output2="$l_output2 File: "$l_file": mode ($l_mode), owner ($l_owner), group ($l_group) - must be 0600 or more restrictive and root:root."
+   l_output2="$l_output2 File: "$l_file": mode ($l_mode); owner ($l_owner); group ($l_group) - must be 0600 or more restrictive and root:root."
    l_pass="no"
   else
-   l_output="$l_output File: "$l_file": Correct mode ($l_mode), owner ($l_owner), group ($l_group)."
+   l_output="$l_output File: "$l_file": Correct mode ($l_mode); owner ($l_owner); group ($l_group)."
   fi
 done
 
@@ -5366,10 +5366,10 @@ done
    l_output2="$l_output2 File: "$l_file" could not be audited."
    l_pass="no"
   elif [ $((8#$l_mode & 0177)) -ne 0 ] || [ "$l_owner" != "root" ] || [ "$l_group" != "root" ]; then
-   l_output2="$l_output2 File: "$l_file": mode ($l_mode), owner ($l_owner), group ($l_group) - must be 0600 or more restrictive and root:root."
+   l_output2="$l_output2 File: "$l_file": mode ($l_mode); owner ($l_owner); group ($l_group) - must be 0600 or more restrictive and root:root."
    l_pass="no"
   else
-   l_output="$l_output File: "$l_file": Correct mode ($l_mode), owner ($l_owner), group ($l_group)."
+   l_output="$l_output File: "$l_file": Correct mode ($l_mode); owner ($l_owner); group ($l_group)."
   fi
 done
 
