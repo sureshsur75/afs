@@ -1,9 +1,9 @@
 FQDN:afs-vm-kcns-runner.wmqiacnlfwgufopvtsfcji3dyf.bx.internal.cloudapp.net 
-ACCOUNT:test 
-ACCOUNT BAMID:12345 
+ACCOUNT:AFS 
+ACCOUNT BAMID:BAM0002B6B 
 CIS Benchmark Version: 1.0.0 
 Scan Date: 2026-09-11 
-Time-Stamp: 14:36:44 
+Time-Stamp: 14:42:56 
 IP-ADDRESS:192.168.8.4/27 
 OS-NAME: Ubuntu_24.04.4_LTS 
 Scan Version: V1.0 
