@@ -694,30 +694,39 @@ fi
 
 #1.3.1.2
 #Ensure AppArmor is enabled in the bootloader configuration.
-#!/usr/bin/env bash
-
 {
-l_output="" l_output2=""
+ l_output="" l_output2=""
+ l_grub="/boot/grub/grub.cfg"
 
-if grep "^\s*linux" /boot/grub/grub.cfg 2>/dev/null | grep -v "apparmor=1" >/dev/null; then
-l_output2="One or more linux lines do not have apparmor=1 parameter set."
-else
-l_output="All linux lines have apparmor=1 parameter set - AppArmor is enabled in the bootloader configuration."
-fi
+ # CIS audit requires BOTH apparmor=1 AND security=apparmor on every linux line.
+ l_linux_lines="$(grep -E '^\s*linux([[:space:]]|$)' "$l_grub" 2>/dev/null)"
 
-if [ -z "$l_output2" ]; then
-echo "Initial Setup / Mandatory Access Control" >> p1
-echo "Ensure AppArmor is enabled in the bootloader configuration." >> p2
-echo "$l_output" >> p3
-echo "Yes" >> p4
-echo "1.3.1.2" >> p12
-else
-echo "Initial Setup / Mandatory Access Control" >> p1
-echo "Ensure AppArmor is enabled in the bootloader configuration." >> p2
-echo "$l_output2" >> p3
-echo "No" >> p4
-echo "1.3.1.2" >> p12
-fi
+ if [ -z "$l_linux_lines" ]; then
+  l_output2="No linux lines were found in $l_grub. Unable to verify AppArmor boot parameters."
+ else
+  if printf '%s\n' "$l_linux_lines" | grep -Ev 'apparmor=1([[:space:]]|$)' >/dev/null 2>&1; then
+   l_output2="$l_output2 One or more linux lines do not have the apparmor=1 parameter set."
+  else
+   l_output="$l_output All linux lines have apparmor=1 parameter set."
+  fi
+
+  if printf '%s\n' "$l_linux_lines" | grep -Ev 'security=apparmor([[:space:]]|$)' >/dev/null 2>&1; then
+   l_output2="$l_output2 One or more linux lines do not have the security=apparmor parameter set."
+  else
+   l_output="$l_output All linux lines have security=apparmor parameter set."
+  fi
+ fi
+
+ echo "Initial Setup / Mandatory Access Control" >> p1
+ echo "Ensure AppArmor is enabled in the bootloader configuration." >> p2
+ if [ -z "$l_output2" ]; then
+  echo "$l_output" >> p3
+  echo "Yes" >> p4
+ else
+  echo "$l_output2" >> p3
+  echo "No" >> p4
+ fi
+ echo "1.3.1.2" >> p12
 }
 
 #1.3.1.3
@@ -1443,63 +1452,36 @@ fi
 #1.7.3
 #Ensure GDM disable-user-list option is enabled.
 {
-l_pkgoutput=""
-if command -v dpkg-query > /dev/null 2>&1; then
-l_pq="dpkg-query -W"
-elif command -v rpm > /dev/null 2>&1; then
-l_pq="rpm -q"
-fi
-l_pcl="gdm gdm3" # Space seporated list of packages to check
-for l_pn in $l_pcl; do
-$l_pq "$l_pn" > /dev/null 2>&1 && l_pkgoutput="$l_pkgoutput\n - Package: "$l_pn" exists on the system\n - checking configuration"
-done
-if [ -n "$l_pkgoutput" ]; then
-output="" output2=""
-l_gdmfile="$(grep -Pril '^\hdisable-user-list\h=\htrue\b' /etc/dconf/db 2>/dev/null)"
-if [ -n "$l_gdmfile" ]; then
-output="$output\n - The "disable-user-list" option is enabled in "$l_gdmfile""
-l_gdmprofile="$(awk -F/ '{split($(NF-1),a,".");print a[1]}' <<< "$l_gdmfile")"
-if grep -Pq "^\hsystem-db:$l_gdmprofile" /etc/dconf/profile/"$l_gdmprofile" 2>/dev/null; then
-output="$output\n - The "$l_gdmprofile" exists"
-else
-output2="$output2\n - The "$l_gdmprofile" doesn't exist"
-fi
-if [ -f "/etc/dconf/db/$l_gdmprofile" ]; then
-output="$output\n - The "$l_gdmprofile" profile exists in the dconf database"
-else
-output2="$output2\n - The "$l_gdmprofile" profile doesn't exist in the dconf database"
-fi
-else
-output2="$output2\n - The "disable-user-list" option is not enabled"
-fi
-if [ -z "$output2" ]; then
-echo "Initial Setup / Configure GNOME Display Manager" >> p1
-echo "Ensure GDM disable-user-list option is enabled." >> p2
-echo "GDM disable-user-list option is enabled." >> p3
-echo "Yes" >> p4
-echo "1.7.3" >> p12
-else
-echo "Initial Setup / Configure GNOME Display Manager" >> p1
-echo "Ensure GDM disable-user-list option is enabled." >> p2
-echo "GDM disable-user-list option is Not enabled." >> p3
-echo "No" >> p4
-echo "1.7.3" >> p12
-[ -n "$output" ] && echo -e "$output\n"
-fi
-else
-echo "Initial Setup / Configure GNOME Display Manager" >> p1
-echo "Ensure GDM disable-user-list option is enabled." >> p2
-echo "GDM disable-user-list is not configured" >> p3
-echo "No" >> p4
-echo "1.7.3" >> p12
-fi
-else
-echo "Initial Setup / Configure GNOME Display Manager" >> p1
-echo "Ensure GDM disable-user-list option is enabled." >> p2
-echo "GDM disable-user-list is not configured" >> p3
-echo "Yes" >> p4
-echo "1.7.3" >> p12
-fi
+ l_output="" l_output2=""
+ l_gdm_installed="no"
+
+ if dpkg-query -W -f='${Status}' gdm3 2>/dev/null | grep -q "ok installed" || \
+    dpkg-query -W -f='${Status}' gdm 2>/dev/null | grep -q "ok installed"; then
+  l_gdm_installed="yes"
+ fi
+
+ if [ "$l_gdm_installed" != "yes" ]; then
+  l_output="GDM package is not installed. Control is not applicable."
+ else
+  # CIS audit procedure: gsettings get org.gnome.login-screen disable-user-list
+  l_value="$(gsettings get org.gnome.login-screen disable-user-list 2>/dev/null | tr '[:upper:]' '[:lower:]' | tr -d '[:space:]')"
+  if [ "$l_value" = "true" ]; then
+   l_output="gsettings reports org.gnome.login-screen disable-user-list = true."
+  else
+   l_output2="gsettings reports org.gnome.login-screen disable-user-list = ${l_value:-not configured}; CIS requires true."
+  fi
+ fi
+
+ echo "Initial Setup / Configure GNOME Display Manager" >> p1
+ echo "Ensure GDM disable-user-list option is enabled." >> p2
+ if [ -z "$l_output2" ]; then
+  echo "$l_output" >> p3
+  echo "Yes" >> p4
+ else
+  echo "$l_output2" >> p3
+  echo "No" >> p4
+ fi
+ echo "1.7.3" >> p12
 }
 
 #1.7.4
@@ -2868,20 +2850,29 @@ fi
 
 #2.2.4
 #Ensure telnet client is not installed.
-pac4='telnet'
-if dpkg-query -W -f='${Status}' $pac4 2>/dev/null | grep -q "ok installed"; then
-	echo "Services / Configure Client Services" >> p1
-	echo "Ensure telnet client is not installed." >> p2
-	echo "telnet client service is installed." >> p3
-	echo "No" >> p4
-	echo "2.2.4" >> p12
-else
-	echo "Services / Configure Client Services" >> p1
-  	echo "Ensure telnet client is not installed." >> p2
-  	echo "telnet client service is not installed." >> p3
-  	echo "Yes" >> p4
-  	echo "2.2.4" >> p12
-fi
+{
+ l_output="" l_output2=""
+
+ # CIS requires BOTH inetutils-telnet and telnet to be absent.
+ for l_pkg in inetutils-telnet telnet; do
+  if dpkg-query -W -f='${Status}' "$l_pkg" 2>/dev/null | grep -q "ok installed"; then
+   l_output2="$l_output2 $l_pkg is installed."
+  else
+   l_output="$l_output $l_pkg is not installed."
+  fi
+done
+
+ echo "Services / Configure Client Services" >> p1
+ echo "Ensure telnet client is not installed." >> p2
+ if [ -z "$l_output2" ]; then
+  echo "inetutils-telnet and telnet are not installed." >> p3
+  echo "Yes" >> p4
+ else
+  echo "$l_output2" >> p3
+  echo "No" >> p4
+ fi
+ echo "2.2.4" >> p12
+}
 
 #2.2.5
 #Ensure LDAP client is not installed.
@@ -3279,125 +3270,126 @@ else
 	echo "2.4.1.7" >> p12
 fi
 
-# 2.4.1.8
-# Ensure crontab is restricted to authorized users (Automated)
+#2.4.1.8
+#Ensure crontab is restricted to authorized users (Automated)
+{
+ l_output="" l_output2=""
+ l_cron_installed="no"
 
-echo "Services / Job Schedulers" >> p1
-echo "Ensure crontab is restricted to authorized users" >> p2
+ # CIS conditional: perform the file audit only when cron is installed.
+ if dpkg-query -W -f='${Status}' cron 2>/dev/null | grep -q "ok installed" || \
+    command -v crontab >/dev/null 2>&1; then
+  l_cron_installed="yes"
+ fi
 
-# Consider cron "installed" if crontab exists OR a cron unit exists
-cron_installed="no"
-if command -v crontab >/dev/null 2>&1; then
-  cron_installed="yes"
-elif systemctl list-unit-files 2>/dev/null | awk '$1~/^crond?\.service$/ {f=1} END{exit !f}'; then
-  cron_installed="yes"
-fi
+ echo "Services / Job Schedulers" >> p1
+ echo "Ensure crontab is restricted to authorized users" >> p2
 
-if [ "$cron_installed" != "yes" ]; then
-  echo "cron not installed: no crontab(1) and no cron[d].service unit" >> p3
-  echo "No" >> p4
-  echo "2.4.1.8" >> p12
-else
-  # Helper to check mode<=0640 and root:root; returns 'ok' or 'bad:...' or 'missing'
-  check_file() {
-    local f="$1"
-    if [ ! -e "$f" ]; then
-      printf "missing"
-      return
-    fi
-    # stat outputs: <mode> <owner> <group> (mode is numeric like 640 or 0640)
-    set -- $(stat -Lc '%a %U %G' "$f" 2>/dev/null)
-    local mode="$1" owner="$2" group="$3"
-    # normalize to last three digits for compare
-    if [ "${#mode}" -eq 3 ]; then
-      m_dec=$((10#$mode))
-    else
-      m_dec=$((10#${mode: -3}))
-    fi
-    local reasons=""
-    if [ "$m_dec" -gt 640 ]; then reasons="${reasons}mode=$mode (>0640); "; fi
-    [ "$owner" = "root" ] || reasons="${reasons}owner=$owner (!=root); "
-    [ "$group" = "root" ] || reasons="${reasons}group=$group (!=root); "
-    if [ -z "$reasons" ]; then printf "ok"; else printf "bad:%s" "${reasons% }"; fi
-  }
-
-  allow_status=$(check_file /etc/cron.allow)
-  deny_status=$(check_file /etc/cron.deny)
-
-  # Audit decision—strictly per requirement:
-  # - /etc/cron.allow must exist and be compliant
-  # - /etc/cron.deny must either NOT exist OR be compliant if it does
-  if [ "$allow_status" = "ok" ] && { [ "$deny_status" = "missing" ] || [ "$deny_status" = "ok" ]; }; then
-    if [ "$deny_status" = "missing" ]; then
-      echo "/etc/cron.allow present (<=0640, root:root); /etc/cron.deny not present" >> p3
-    else
-      echo "/etc/cron.allow present (<=0640, root:root); /etc/cron.deny present (<=0640, root:root)" >> p3
-    fi
-    echo "Yes" >> p4
+ if [ "$l_cron_installed" != "yes" ]; then
+  echo "cron package is not installed; control is not applicable." >> p3
+  echo "Yes" >> p4
+ else
+  # /etc/cron.allow: must exist, mode 0640 or more restrictive, owner root,
+  # group root or crontab.
+  if [ ! -e /etc/cron.allow ]; then
+   l_output2="$l_output2 /etc/cron.allow does not exist."
   else
-    msg=""
-    if [ "$allow_status" != "ok" ]; then
-      [ "$allow_status" = "missing" ] && msg="/etc/cron.allow missing; " || msg="/etc/cron.allow non-compliant (${allow_status}); "
-    fi
-    if [ "$deny_status" != "missing" ] && [ "$deny_status" != "ok" ]; then
-      msg="${msg}/etc/cron.deny non-compliant (${deny_status}); "
-    fi
-    echo "${msg% ; }" >> p3
-    echo "No" >> p4
+   l_info="$(stat -Lc 'Access: (%a/%A) Owner: (%U) Group: (%G)' /etc/cron.allow 2>/dev/null)"
+   l_mode="$(stat -Lc '%a' /etc/cron.allow 2>/dev/null)"
+   l_owner="$(stat -Lc '%U' /etc/cron.allow 2>/dev/null)"
+   l_group="$(stat -Lc '%G' /etc/cron.allow 2>/dev/null)"
+   if [ $((8#$l_mode & 0177)) -ne 0 ] || [ "$l_owner" != "root" ] || { [ "$l_group" != "root" ] && [ "$l_group" != "crontab" ]; }; then
+    l_output2="$l_output2 /etc/cron.allow is not compliant: $l_info."
+   else
+    l_output="$l_output /etc/cron.allow: $l_info."
+   fi
   fi
 
-  echo "2.4.1.8" >> p12
-fi
+  # /etc/cron.deny: must not exist OR, if present, meet the same requirements.
+  if [ -e /etc/cron.deny ]; then
+   l_info="$(stat -Lc 'Access: (%a/%A) Owner: (%U) Group: (%G)' /etc/cron.deny 2>/dev/null)"
+   l_mode="$(stat -Lc '%a' /etc/cron.deny 2>/dev/null)"
+   l_owner="$(stat -Lc '%U' /etc/cron.deny 2>/dev/null)"
+   l_group="$(stat -Lc '%G' /etc/cron.deny 2>/dev/null)"
+   if [ $((8#$l_mode & 0177)) -ne 0 ] || [ "$l_owner" != "root" ] || { [ "$l_group" != "root" ] && [ "$l_group" != "crontab" ]; }; then
+    l_output2="$l_output2 /etc/cron.deny is not compliant: $l_info."
+   else
+    l_output="$l_output /etc/cron.deny: $l_info."
+   fi
+  else
+   l_output="$l_output /etc/cron.deny does not exist (compliant)."
+  fi
 
-################################################################################################################
+  if [ -z "$l_output2" ]; then
+   echo "$l_output" >> p3
+   echo "Yes" >> p4
+  else
+   echo "$l_output2" >> p3
+   echo "No" >> p4
+  fi
+ fi
+ echo "2.4.1.8" >> p12
+}
 
 #2.4.2.1
 #Ensure at is restricted to authorized users (Automated)
 {
  l_output="" l_output2=""
+ l_at_installed="no"
 
- if [ -f "/etc/at.allow" ]; then
-  l_perms="$(stat -c '%a' /etc/at.allow)"
-  l_uid="$(stat -c '%U' /etc/at.allow)"
-  l_gid="$(stat -c '%G' /etc/at.allow)"
-  if [ "$l_perms" -le 640 ] 2>/dev/null && [ "$l_uid" = "root" ] && { [ "$l_gid" = "root" ] || [ "$l_gid" = "daemon" ]; }; then
-   l_output="$l_output /etc/at.allow exists with correct permissions ($l_perms) owner $l_uid group $l_gid."
-  else
-   l_output2="$l_output2 /etc/at.allow has incorrect permissions ($l_perms) owner $l_uid group $l_gid."
-  fi
- else
-  l_output2="$l_output2 /etc/at.allow does not exist."
+ # CIS conditional: audit access files only when the at package is installed.
+ if dpkg-query -W -f='${Status}' at 2>/dev/null | grep -q "ok installed" || command -v at >/dev/null 2>&1; then
+  l_at_installed="yes"
  fi
 
- if [ -f "/etc/at.deny" ]; then
-  l_perms="$(stat -c '%a' /etc/at.deny)"
-  l_uid="$(stat -c '%U' /etc/at.deny)"
-  l_gid="$(stat -c '%G' /etc/at.deny)"
-  if [ "$l_perms" -le 640 ] 2>/dev/null && [ "$l_uid" = "root" ] && { [ "$l_gid" = "root" ] || [ "$l_gid" = "daemon" ]; }; then
-   l_output="$l_output /etc/at.deny exists with correct permissions ($l_perms) owner $l_uid group $l_gid."
-  else
-   l_output2="$l_output2 /etc/at.deny has incorrect permissions ($l_perms) owner $l_uid group $l_gid."
-  fi
- else
-  l_output="$l_output /etc/at.deny does not exist."
- fi
+ echo "Services / Job Schedulers" >> p1
+ echo "Ensure at is restricted to authorized users." >> p2
 
- if [ -z "$l_output2" ]; then
-  echo "Services / Job Schedulers" >> p1
-  echo "Ensure at is restricted to authorized users." >> p2
-  echo "$l_output" >> p3
+ if [ "$l_at_installed" != "yes" ]; then
+  echo "at package is not installed; control is not applicable." >> p3
   echo "Yes" >> p4
-  echo "2.4.2.1" >> p12
  else
-  echo "Services / Job Schedulers" >> p1
-  echo "Ensure access to at is configured." >> p2
-  echo "$l_output2" >> p3
-  echo "No" >> p4
-  echo "2.4.2.1" >> p12
+  # /etc/at.allow must exist and be 0640 or more restrictive, root:daemon or root:root.
+  if [ ! -e /etc/at.allow ]; then
+   l_output2="$l_output2 /etc/at.allow does not exist."
+  else
+   l_info="$(stat -Lc 'Access: (%a/%A) Owner: (%U) Group: (%G)' /etc/at.allow 2>/dev/null)"
+   l_mode="$(stat -Lc '%a' /etc/at.allow 2>/dev/null)"
+   l_owner="$(stat -Lc '%U' /etc/at.allow 2>/dev/null)"
+   l_group="$(stat -Lc '%G' /etc/at.allow 2>/dev/null)"
+   if [ $((8#$l_mode & 0177)) -ne 0 ] || [ "$l_owner" != "root" ] || { [ "$l_group" != "root" ] && [ "$l_group" != "daemon" ]; }; then
+    l_output2="$l_output2 /etc/at.allow is not compliant: $l_info."
+   else
+    l_output="$l_output /etc/at.allow: $l_info."
+   fi
+  fi
+
+  # /etc/at.deny must not exist OR, if present, meet the same requirements.
+  if [ -e /etc/at.deny ]; then
+   l_info="$(stat -Lc 'Access: (%a/%A) Owner: (%U) Group: (%G)' /etc/at.deny 2>/dev/null)"
+   l_mode="$(stat -Lc '%a' /etc/at.deny 2>/dev/null)"
+   l_owner="$(stat -Lc '%U' /etc/at.deny 2>/dev/null)"
+   l_group="$(stat -Lc '%G' /etc/at.deny 2>/dev/null)"
+   if [ $((8#$l_mode & 0177)) -ne 0 ] || [ "$l_owner" != "root" ] || { [ "$l_group" != "root" ] && [ "$l_group" != "daemon" ]; }; then
+    l_output2="$l_output2 /etc/at.deny is not compliant: $l_info."
+   else
+    l_output="$l_output /etc/at.deny: $l_info."
+   fi
+  else
+   l_output="$l_output /etc/at.deny does not exist (compliant)."
+  fi
+
+  if [ -z "$l_output2" ]; then
+   echo "$l_output" >> p3
+   echo "Yes" >> p4
+  else
+   echo "$l_output2" >> p3
+   echo "No" >> p4
+  fi
  fi
+ echo "2.4.2.1" >> p12
 }
 
-##########################################################################################################
 #3.1.2
 #Ensure wireless interfaces are disabled (Automated)
 #!/usr/bin/env bash
@@ -4956,33 +4948,29 @@ fi
 {
  l_output="" l_output2=""
 
- # Check iptables is installed
+ # CIS audit requires BOTH packages to be installed.
  if dpkg-query -s iptables &>/dev/null; then
   l_output="$l_output iptables is installed."
  else
   l_output2="$l_output2 iptables is not installed."
  fi
 
- # Check iptables-persistent is installed
  if dpkg-query -s iptables-persistent &>/dev/null; then
   l_output="$l_output iptables-persistent is installed."
  else
   l_output2="$l_output2 iptables-persistent is not installed."
  fi
 
+ echo "Network Configuration / Configure iptables" >> p1
+ echo "Ensure iptables packages are installed." >> p2
  if [ -z "$l_output2" ]; then
-  echo "Network Configuration / Configure iptables" >> p1
-  echo "Ensure iptables packages are installed." >> p2
-  echo "iptables and iptables-persistent are installed." >> p3
+  echo "$l_output" >> p3
   echo "Yes" >> p4
-  echo "4.4.1.1" >> p12
  else
-  echo "Network Configuration / Configure iptables" >> p1
-  echo "Ensure iptables packages are installed." >> p2
   echo "$l_output2" >> p3
   echo "No" >> p4
-  echo "4.4.1.1" >> p12
  fi
+ echo "4.4.1.1" >> p12
 }
 
 #4.4.1.2
@@ -5046,41 +5034,27 @@ fi
 #Ensure iptables default deny firewall policy.
 {
  l_output="" l_output2=""
+ l_iptables="$(iptables -L 2>/dev/null)"
 
- # Check INPUT chain policy is DROP or REJECT
- if iptables -L INPUT 2>/dev/null | grep -qP '^Chain INPUT \(policy (DROP|REJECT)\)'; then
-  l_output="$l_output INPUT chain policy is DROP/REJECT."
- else
-  l_output2="$l_output2 INPUT chain policy is not DROP or REJECT."
- fi
+ # CIS audit procedure checks INPUT, OUTPUT and FORWARD policies.
+ for l_chain in INPUT OUTPUT FORWARD; do
+  if printf '%s\n' "$l_iptables" | grep -qP "^Chain $l_chain \(policy (DROP|REJECT)\)"; then
+   l_output="$l_output $l_chain chain policy is DROP/REJECT."
+  else
+   l_output2="$l_output2 $l_chain chain policy is not DROP or REJECT."
+  fi
+done
 
- # Check OUTPUT chain policy is DROP or REJECT
- if iptables -L OUTPUT 2>/dev/null | grep -qP '^Chain OUTPUT \(policy (DROP|REJECT)\)'; then
-  l_output="$l_output OUTPUT chain policy is DROP/REJECT."
- else
-  l_output2="$l_output2 OUTPUT chain policy is not DROP or REJECT."
- fi
-
- # Check FORWARD chain policy is DROP or REJECT
- if iptables -L FORWARD 2>/dev/null | grep -qP '^Chain FORWARD \(policy (DROP|REJECT)\)'; then
-  l_output="$l_output FORWARD chain policy is DROP/REJECT."
- else
-  l_output2="$l_output2 FORWARD chain policy is not DROP or REJECT."
- fi
-
+ echo "Network Configuration / Configure iptables" >> p1
+ echo "Ensure iptables default deny firewall policy." >> p2
  if [ -z "$l_output2" ]; then
-  echo "Network Configuration / Configure iptables" >> p1
-  echo "Ensure iptables default deny firewall policy." >> p2
-  echo "iptables default deny policy is set correctly for INPUT, OUTPUT and FORWARD chains." >> p3
+  echo "$l_output" >> p3
   echo "Yes" >> p4
-  echo "4.4.2.1" >> p12
  else
-  echo "Network Configuration / Configure iptables" >> p1
-  echo "Ensure iptables default deny firewall policy." >> p2
   echo "$l_output2" >> p3
   echo "No" >> p4
-  echo "4.4.2.1" >> p12
  fi
+ echo "4.4.2.1" >> p12
 }
 
 #4.4.2.2
@@ -5334,27 +5308,87 @@ fi
 
 #5.1.1
 #Ensure permissions on /etc/ssh/sshd_config are configured
-otpt32=$(stat -Lc "%n %a %u/%U %g/%G" /etc/ssh/sshd_config)
+{
+ l_output="" l_output2=""
+ l_files=""
 
-# Extract the permissions, Uid, and Gid from the output
-permissions11=$(echo $otpt32 | cut -d' ' -f2)
-uid11=$(echo $otpt32 | cut -d' ' -f3)
-gid11=$(echo $otpt32 | cut -d' ' -f4)
+ # Always check the main sshd_config and *.conf files in sshd_config.d.
+ [ -f /etc/ssh/sshd_config ] && l_files="$l_files /etc/ssh/sshd_config"
+ for l_file in /etc/ssh/sshd_config.d/*.conf; do
+  [ -f "$l_file" ] && l_files="$l_files $l_file"
+done
 
-# Check the conditions for compliance
-if [[ $permissions11 == 600 && $uid11 == "0/root" && $gid11 == "0/root" ]]; then
-      echo "Access Control / Configure SSH Server" >>p1
-	  echo "Ensure permissions on /etc/ssh/sshd_config are configured" >>p2
-	  echo "Permissions of sshd_config 0600 and ownership of root:root" >>p3
-	  echo "Yes" >>p4
-	  echo "5.1.1" >>p12
-else
-      echo "Access Control / Configure SSH Server" >>p1
-	  echo "Ensure permissions on /etc/ssh/sshd_config are configured" >>p2
-	  echo "No Permissions of sshd_config 0600 and ownership of root:root" >>p3
-	  echo "No" >>p4
-	  echo "5.1.1" >>p12
-fi
+ # Also discover *.conf files referenced by Include directives. This follows the
+ # CIS note requiring included locations to be checked as well.
+ l_scan_files="$l_files"
+ l_seen=""
+ l_pass="yes"
+ for l_file in $l_scan_files; do
+  case " $l_seen " in *" $l_file "*) continue ;; esac
+  l_seen="$l_seen $l_file"
+
+  l_stat="$(stat -Lc '%#a:%U:%G' "$l_file" 2>/dev/null)"
+  l_mode="${l_stat%%:*}"
+  l_rest="${l_stat#*:}"
+  l_owner="${l_rest%%:*}"
+  l_group="${l_rest#*:}"
+
+  if [ -z "$l_stat" ]; then
+   l_output2="$l_output2 File: "$l_file" could not be audited."
+   l_pass="no"
+  elif [ $((8#$l_mode & 0177)) -ne 0 ] || [ "$l_owner" != "root" ] || [ "$l_group" != "root" ]; then
+   l_output2="$l_output2 File: "$l_file": mode ($l_mode), owner ($l_owner), group ($l_group) - must be 0600 or more restrictive and root:root."
+   l_pass="no"
+  else
+   l_output="$l_output File: "$l_file": Correct mode ($l_mode), owner ($l_owner), group ($l_group)."
+  fi
+done
+
+ # Discover additional Include targets from the files already identified.
+ l_new_files=""
+ for l_file in $l_seen; do
+  while IFS= read -r l_inc; do
+   [ -z "$l_inc" ] && continue
+   case "$l_inc" in
+    /*) l_pattern="$l_inc" ;;
+    *) l_pattern="$(dirname "$l_file")/$l_inc" ;;
+   esac
+   for l_target in $l_pattern; do
+    [ -f "$l_target" ] && l_new_files="$l_new_files $l_target"
+   done
+  done < <(awk '/^[[:space:]]*Include[[:space:]]+/ {sub(/^[[:space:]]*Include[[:space:]]+/,""); print}' "$l_file" 2>/dev/null)
+done
+
+ for l_file in $l_new_files; do
+  case " $l_seen " in *" $l_file "*) continue ;; esac
+  l_seen="$l_seen $l_file"
+  l_stat="$(stat -Lc '%#a:%U:%G' "$l_file" 2>/dev/null)"
+  l_mode="${l_stat%%:*}"
+  l_rest="${l_stat#*:}"
+  l_owner="${l_rest%%:*}"
+  l_group="${l_rest#*:}"
+  if [ -z "$l_stat" ]; then
+   l_output2="$l_output2 File: "$l_file" could not be audited."
+   l_pass="no"
+  elif [ $((8#$l_mode & 0177)) -ne 0 ] || [ "$l_owner" != "root" ] || [ "$l_group" != "root" ]; then
+   l_output2="$l_output2 File: "$l_file": mode ($l_mode), owner ($l_owner), group ($l_group) - must be 0600 or more restrictive and root:root."
+   l_pass="no"
+  else
+   l_output="$l_output File: "$l_file": Correct mode ($l_mode), owner ($l_owner), group ($l_group)."
+  fi
+done
+
+ echo "Access Control / Configure SSH Server" >> p1
+ echo "Ensure permissions on /etc/ssh/sshd_config are configured" >> p2
+ if [ "$l_pass" = "yes" ]; then
+  echo "$l_output" >> p3
+  echo "Yes" >> p4
+ else
+  echo "$l_output2" >> p3
+  echo "No" >> p4
+ fi
+ echo "5.1.1" >> p12
+}
 
 #5.1.2
 #Ensure access to SSH private host key files is configured.
@@ -5881,30 +5915,27 @@ fi
 #Ensure sshd PermitRootLogin is disabled.
 {
  l_output="" l_output2=""
- l_value="$(sshd -T 2>/dev/null | grep -i '^permitrootlogin' | awk '{print $2}' | tr '[:upper:]' '[:lower:]')"
+
+ # CIS audit procedure uses sshd -T to evaluate the effective configuration.
+ l_value="$(sshd -T 2>/dev/null | awk 'tolower($1)=="permitrootlogin" {print tolower($2); exit}')"
  if [ -z "$l_value" ]; then
-  l_value="$(grep -Pis '^\h*PermitRootLogin\h+' /etc/ssh/sshd_config /etc/ssh/sshd_config.d/*.conf 2>/dev/null | awk '{print $2}' | tr '[:upper:]' '[:lower:]' | tail -1)"
- fi
- if [ -z "$l_value" ]; then
-  l_output="$l_output PermitRootLogin is not explicitly configured."
- elif [ "$l_value" = "no" ] || [ "$l_value" = "prohibit-password" ] || [ "$l_value" = "without-password" ] || [ "$l_value" = "forced-commands-only" ]; then
-  l_output="$l_output PermitRootLogin is set to \"$l_value\"."
+  l_output2="Unable to determine PermitRootLogin from 'sshd -T'."
+ elif [ "$l_value" = "no" ]; then
+  l_output="sshd -T reports: permitrootlogin no."
  else
-  l_output2="$l_output2 PermitRootLogin is set to \"$l_value\"."
+  l_output2="sshd -T reports: permitrootlogin $l_value; CIS requires no."
  fi
+
+ echo "Access Control / Configure SSH Server" >> p1
+ echo "Ensure sshd PermitRootLogin is disabled." >> p2
  if [ -z "$l_output2" ]; then
-  echo "Access Control / Configure SSH Server" >> p1
-  echo "Ensure sshd PermitRootLogin is disabled." >> p2
   echo "$l_output" >> p3
   echo "Yes" >> p4
-  echo "5.1.20" >> p12
  else
-  echo "Access Control / Configure SSH Server" >> p1
-  echo "Ensure sshd PermitRootLogin is disabled." >> p2
   echo "$l_output2" >> p3
   echo "No" >> p4
-  echo "5.1.20" >> p12
  fi
+ echo "5.1.20" >> p12
 }
 
 #5.1.21
