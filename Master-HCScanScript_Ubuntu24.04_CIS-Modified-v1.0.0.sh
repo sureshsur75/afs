@@ -3305,7 +3305,7 @@ fi
   fi
 
   # Check /etc/cron.deny
-  # It may not exist. If it exists, it must be compliant.
+  # cron.deny is allowed to be absent
   if [ -f "/etc/cron.deny" ]; then
    l_perms="$(stat -c '%a' /etc/cron.deny 2>/dev/null)"
    l_uid="$(stat -c '%U' /etc/cron.deny 2>/dev/null)"
@@ -3368,7 +3368,7 @@ fi
   fi
 
   # Check /etc/at.deny
-  # It may not exist. If it exists, it must be compliant.
+  # at.deny is allowed to be absent
   if [ -f "/etc/at.deny" ]; then
    l_perms="$(stat -c '%a' /etc/at.deny 2>/dev/null)"
    l_uid="$(stat -c '%U' /etc/at.deny 2>/dev/null)"
@@ -3403,7 +3403,6 @@ fi
   echo "2.4.2.1" >> p12
  fi
 }
-
 ##########################################################################################################
 #3.1.2
 #Ensure wireless interfaces are disabled (Automated)
@@ -4985,7 +4984,7 @@ fi
  else
   echo "Network Configuration / Configure iptables" >> p1
   echo "Ensure iptables packages are installed." >> p2
-  echo "$l_output $l_output2" >> p3
+  echo "$l_output2" >> p3
   echo "No" >> p4
   echo "4.4.1.1" >> p12
  fi
@@ -5082,7 +5081,7 @@ fi
  else
   echo "Network Configuration / Configure iptables" >> p1
   echo "Ensure iptables default deny firewall policy." >> p2
-  echo "$l_output $l_output2" >> p3
+  echo "$l_output2" >> p3
   echo "No" >> p4
   echo "4.4.2.1" >> p12
  fi
