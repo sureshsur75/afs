@@ -3283,62 +3283,68 @@ fi
 #Ensure crontab is restricted to authorized users (Automated)
 {
  l_output="" l_output2=""
+ l_cron_installed="no"
 
- # Check if cron is installed
- if dpkg-query -W -f='${Status}' cron 2>/dev/null | grep -q '^install ok installed$'; then
-
-  # Check /etc/cron.allow
-  if [ -f "/etc/cron.allow" ]; then
-   l_perms="$(stat -c '%a' /etc/cron.allow 2>/dev/null)"
-   l_uid="$(stat -c '%U' /etc/cron.allow 2>/dev/null)"
-   l_gid="$(stat -c '%G' /etc/cron.allow 2>/dev/null)"
-
-   if [ "$l_perms" -le 640 ] 2>/dev/null && \
-      [ "$l_uid" = "root" ] && \
-      { [ "$l_gid" = "root" ] || [ "$l_gid" = "crontab" ]; }; then
-    l_output="$l_output /etc/cron.allow exists with correct permissions ($l_perms) owner $l_uid group $l_gid."
-   else
-    l_output2="$l_output2 /etc/cron.allow has incorrect permissions ($l_perms) owner $l_uid group $l_gid."
-   fi
-  else
-   l_output2="$l_output2 /etc/cron.allow does not exist."
-  fi
-
-  # Check /etc/cron.deny
-  # cron.deny is allowed to be absent
-  if [ -f "/etc/cron.deny" ]; then
-   l_perms="$(stat -c '%a' /etc/cron.deny 2>/dev/null)"
-   l_uid="$(stat -c '%U' /etc/cron.deny 2>/dev/null)"
-   l_gid="$(stat -c '%G' /etc/cron.deny 2>/dev/null)"
-
-   if [ "$l_perms" -le 640 ] 2>/dev/null && \
-      [ "$l_uid" = "root" ] && \
-      { [ "$l_gid" = "root" ] || [ "$l_gid" = "crontab" ]; }; then
-    l_output="$l_output /etc/cron.deny exists with correct permissions ($l_perms) owner $l_uid group $l_gid."
-   else
-    l_output2="$l_output2 /etc/cron.deny has incorrect permissions ($l_perms) owner $l_uid group $l_gid."
-   fi
-  else
-   l_output="$l_output /etc/cron.deny does not exist."
-  fi
-
- else
-  l_output="cron package is not installed; control is not applicable."
+ # CIS conditional: perform the file audit only when cron is installed.
+ if dpkg-query -W -f='${Status}' cron 2>/dev/null | grep -q "ok installed" || \
+    command -v crontab >/dev/null 2>&1; then
+  l_cron_installed="yes"
  fi
 
- if [ -z "$l_output2" ]; then
-  echo "Services / Job Schedulers" >> p1
-  echo "Ensure crontab is restricted to authorized users" >> p2
-  echo "$l_output" >> p3
+ echo "Services / Job Schedulers" >> p1
+ echo "Ensure crontab is restricted to authorized users" >> p2
+
+ if [ "$l_cron_installed" != "yes" ]; then
+  echo "cron package is not installed; control is not applicable." >> p3
   echo "Yes" >> p4
-  echo "2.4.1.8" >> p12
  else
-  echo "Services / Job Schedulers" >> p1
-  echo "Ensure crontab is restricted to authorized users" >> p2
-  echo "$l_output2" >> p3
-  echo "No" >> p4
-  echo "2.4.1.8" >> p12
+  # /etc/cron.allow: must exist, mode 0640 or more restrictive,
+  # owner root, group root or crontab.
+  if [ ! -e /etc/cron.allow ]; then
+   l_output2="$l_output2 /etc/cron.allow does not exist."
+  else
+   l_info="$(stat -Lc 'Access: (%a/%A) Owner: (%U) Group: (%G)' /etc/cron.allow 2>/dev/null)"
+   l_mode="$(stat -Lc '%a' /etc/cron.allow 2>/dev/null)"
+   l_owner="$(stat -Lc '%U' /etc/cron.allow 2>/dev/null)"
+   l_group="$(stat -Lc '%G' /etc/cron.allow 2>/dev/null)"
+
+   if [ $((8#$l_mode & 0177)) -ne 0 ] || \
+      [ "$l_owner" != "root" ] || \
+      { [ "$l_group" != "root" ] && [ "$l_group" != "crontab" ]; }; then
+    l_output2="$l_output2 /etc/cron.allow is not compliant: $l_info."
+   else
+    l_output="$l_output /etc/cron.allow: $l_info."
+   fi
+  fi
+
+  # /etc/cron.deny: must not exist OR, if present, meet the same requirements.
+  if [ -e /etc/cron.deny ]; then
+   l_info="$(stat -Lc 'Access: (%a/%A) Owner: (%U) Group: (%G)' /etc/cron.deny 2>/dev/null)"
+   l_mode="$(stat -Lc '%a' /etc/cron.deny 2>/dev/null)"
+   l_owner="$(stat -Lc '%U' /etc/cron.deny 2>/dev/null)"
+   l_group="$(stat -Lc '%G' /etc/cron.deny 2>/dev/null)"
+
+   if [ $((8#$l_mode & 0177)) -ne 0 ] || \
+      [ "$l_owner" != "root" ] || \
+      { [ "$l_group" != "root" ] && [ "$l_group" != "crontab" ]; }; then
+    l_output2="$l_output2 /etc/cron.deny is not compliant: $l_info."
+   else
+    l_output="$l_output /etc/cron.deny: $l_info."
+   fi
+  else
+   l_output="$l_output /etc/cron.deny does not exist (compliant)."
+  fi
+
+  if [ -z "$l_output2" ]; then
+   echo "$l_output" >> p3
+   echo "Yes" >> p4
+  else
+   echo "$l_output2" >> p3
+   echo "No" >> p4
+  fi
  fi
+
+ echo "2.4.1.8" >> p12
 }
 
 ################################################################################################################
@@ -3346,62 +3352,66 @@ fi
 #Ensure at is restricted to authorized users (Automated)
 {
  l_output="" l_output2=""
+ l_at_installed="no"
 
- # Check if at is installed
- if dpkg-query -W -f='${Status}' at 2>/dev/null | grep -q '^install ok installed$'; then
-
-  # Check /etc/at.allow
-  if [ -f "/etc/at.allow" ]; then
-   l_perms="$(stat -c '%a' /etc/at.allow 2>/dev/null)"
-   l_uid="$(stat -c '%U' /etc/at.allow 2>/dev/null)"
-   l_gid="$(stat -c '%G' /etc/at.allow 2>/dev/null)"
-
-   if [ "$l_perms" -le 640 ] 2>/dev/null && \
-      [ "$l_uid" = "root" ] && \
-      { [ "$l_gid" = "root" ] || [ "$l_gid" = "daemon" ]; }; then
-    l_output="$l_output /etc/at.allow exists with correct permissions ($l_perms) owner $l_uid group $l_gid."
-   else
-    l_output2="$l_output2 /etc/at.allow has incorrect permissions ($l_perms) owner $l_uid group $l_gid."
-   fi
-  else
-   l_output2="$l_output2 /etc/at.allow does not exist."
-  fi
-
-  # Check /etc/at.deny
-  # at.deny is allowed to be absent
-  if [ -f "/etc/at.deny" ]; then
-   l_perms="$(stat -c '%a' /etc/at.deny 2>/dev/null)"
-   l_uid="$(stat -c '%U' /etc/at.deny 2>/dev/null)"
-   l_gid="$(stat -c '%G' /etc/at.deny 2>/dev/null)"
-
-   if [ "$l_perms" -le 640 ] 2>/dev/null && \
-      [ "$l_uid" = "root" ] && \
-      { [ "$l_gid" = "root" ] || [ "$l_gid" = "daemon" ]; }; then
-    l_output="$l_output /etc/at.deny exists with correct permissions ($l_perms) owner $l_uid group $l_gid."
-   else
-    l_output2="$l_output2 /etc/at.deny has incorrect permissions ($l_perms) owner $l_uid group $l_gid."
-   fi
-  else
-   l_output="$l_output /etc/at.deny does not exist."
-  fi
-
- else
-  l_output="at package is not installed; control is not applicable."
+ if dpkg-query -W -f='${Status}' at 2>/dev/null | grep -q "ok installed" || \
+    command -v at >/dev/null 2>&1; then
+  l_at_installed="yes"
  fi
 
- if [ -z "$l_output2" ]; then
-  echo "Services / Job Schedulers" >> p1
-  echo "Ensure at is restricted to authorized users." >> p2
-  echo "$l_output" >> p3
+ echo "Services / Job Schedulers" >> p1
+ echo "Ensure at is restricted to authorized users." >> p2
+
+ if [ "$l_at_installed" != "yes" ]; then
+  echo "at package is not installed; control is not applicable." >> p3
   echo "Yes" >> p4
-  echo "2.4.2.1" >> p12
  else
-  echo "Services / Job Schedulers" >> p1
-  echo "Ensure at is restricted to authorized users." >> p2
-  echo "$l_output2" >> p3
-  echo "No" >> p4
-  echo "2.4.2.1" >> p12
+  # /etc/at.allow must exist and be 0640 or more restrictive, root:daemon or root:root.
+  if [ ! -e /etc/at.allow ]; then
+   l_output2="$l_output2 /etc/at.allow does not exist."
+  else
+   l_info="$(stat -Lc 'Access: (%a/%A) Owner: (%U) Group: (%G)' /etc/at.allow 2>/dev/null)"
+   l_mode="$(stat -Lc '%a' /etc/at.allow 2>/dev/null)"
+   l_owner="$(stat -Lc '%U' /etc/at.allow 2>/dev/null)"
+   l_group="$(stat -Lc '%G' /etc/at.allow 2>/dev/null)"
+
+   if [ $((8#$l_mode & 0177)) -ne 0 ] || \
+      [ "$l_owner" != "root" ] || \
+      { [ "$l_group" != "root" ] && [ "$l_group" != "daemon" ]; }; then
+    l_output2="$l_output2 /etc/at.allow is not compliant: $l_info."
+   else
+    l_output="$l_output /etc/at.allow: $l_info."
+   fi
+  fi
+
+  # /etc/at.deny must not exist OR, if present, meet the same requirements.
+  if [ -e /etc/at.deny ]; then
+   l_info="$(stat -Lc 'Access: (%a/%A) Owner: (%U) Group: (%G)' /etc/at.deny 2>/dev/null)"
+   l_mode="$(stat -Lc '%a' /etc/at.deny 2>/dev/null)"
+   l_owner="$(stat -Lc '%U' /etc/at.deny 2>/dev/null)"
+   l_group="$(stat -Lc '%G' /etc/at.deny 2>/dev/null)"
+
+   if [ $((8#$l_mode & 0177)) -ne 0 ] || \
+      [ "$l_owner" != "root" ] || \
+      { [ "$l_group" != "root" ] && [ "$l_group" != "daemon" ]; }; then
+    l_output2="$l_output2 /etc/at.deny is not compliant: $l_info."
+   else
+    l_output="$l_output /etc/at.deny: $l_info."
+   fi
+  else
+   l_output="$l_output /etc/at.deny does not exist (compliant)."
+  fi
+
+  if [ -z "$l_output2" ]; then
+   echo "$l_output" >> p3
+   echo "Yes" >> p4
+  else
+   echo "$l_output2" >> p3
+   echo "No" >> p4
+  fi
  fi
+
+ echo "2.4.2.1" >> p12
 }
 ##########################################################################################################
 #3.1.2
@@ -4961,33 +4971,30 @@ fi
 {
  l_output="" l_output2=""
 
- # Check iptables is installed
  if dpkg-query -s iptables &>/dev/null; then
   l_output="$l_output iptables is installed."
  else
   l_output2="$l_output2 iptables is not installed."
  fi
 
- # Check iptables-persistent is installed
  if dpkg-query -s iptables-persistent &>/dev/null; then
   l_output="$l_output iptables-persistent is installed."
  else
   l_output2="$l_output2 iptables-persistent is not installed."
  fi
 
+ echo "Network Configuration / Configure iptables" >> p1
+ echo "Ensure iptables packages are installed." >> p2
+
  if [ -z "$l_output2" ]; then
-  echo "Network Configuration / Configure iptables" >> p1
-  echo "Ensure iptables packages are installed." >> p2
   echo "$l_output" >> p3
   echo "Yes" >> p4
-  echo "4.4.1.1" >> p12
  else
-  echo "Network Configuration / Configure iptables" >> p1
-  echo "Ensure iptables packages are installed." >> p2
   echo "$l_output2" >> p3
   echo "No" >> p4
-  echo "4.4.1.1" >> p12
  fi
+
+ echo "4.4.1.1" >> p12
 }
 
 #4.4.1.2
@@ -5050,41 +5057,31 @@ fi
 #Ensure iptables default deny firewall policy.
 {
  l_output="" l_output2=""
+ l_iptables="$(iptables -L 2>/dev/null)"
 
- # Check INPUT chain policy is DROP or REJECT
- if iptables -L INPUT 2>/dev/null | grep -qP '^Chain INPUT \(policy (DROP|REJECT)\)'; then
-  l_output="$l_output INPUT chain policy is DROP or REJECT."
- else
-  l_output2="$l_output2 INPUT chain policy is not DROP or REJECT."
- fi
-
- # Check FORWARD chain policy is DROP or REJECT
- if iptables -L FORWARD 2>/dev/null | grep -qP '^Chain FORWARD \(policy (DROP|REJECT)\)'; then
-  l_output="$l_output FORWARD chain policy is DROP or REJECT."
- else
-  l_output2="$l_output2 FORWARD chain policy is not DROP or REJECT."
- fi
-
- # Check OUTPUT chain policy is DROP or REJECT
- if iptables -L OUTPUT 2>/dev/null | grep -qP '^Chain OUTPUT \(policy (DROP|REJECT)\)'; then
-  l_output="$l_output OUTPUT chain policy is DROP or REJECT."
- else
-  l_output2="$l_output2 OUTPUT chain policy is not DROP or REJECT."
- fi
+ # CIS audit procedure checks INPUT, OUTPUT and FORWARD policies.
+ for l_chain in INPUT OUTPUT FORWARD; do
+  if printf '%s\n' "$l_iptables" | \
+     grep -qP "^Chain $l_chain \(policy (DROP|REJECT)\)"; then
+   l_output="$l_output $l_chain chain policy is DROP/REJECT."
+  else
+   l_output2="$l_output2 $l_chain chain policy is not DROP or REJECT."
+  fi
+ done
 
  if [ -z "$l_output2" ]; then
   echo "Network Configuration / Configure iptables" >> p1
   echo "Ensure iptables default deny firewall policy." >> p2
-  echo "$l_output" >> p3
+  echo "iptables default deny policy is set correctly for INPUT, OUTPUT and FORWARD chains." >> p3
   echo "Yes" >> p4
-  echo "4.4.2.1" >> p12
  else
   echo "Network Configuration / Configure iptables" >> p1
   echo "Ensure iptables default deny firewall policy." >> p2
   echo "$l_output2" >> p3
   echo "No" >> p4
-  echo "4.4.2.1" >> p12
  fi
+
+ echo "4.4.2.1" >> p12
 }
 
 #4.4.2.2
