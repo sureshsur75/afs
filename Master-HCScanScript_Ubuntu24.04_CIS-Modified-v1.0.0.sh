@@ -3298,11 +3298,8 @@ fi
   echo "cron package is not installed; control is not applicable." >> p3
   echo "Yes" >> p4
  else
-  # /etc/cron.allow: must exist, mode 0640 or more restrictive,
-  # owner root, group root or crontab.
-  if [ ! -e /etc/cron.allow ]; then
-   l_output2="$l_output2 /etc/cron.allow does not exist."
-  else
+  # Case 1: /etc/cron.allow exists -> verify its permissions, owner, and group.
+  if [ -e /etc/cron.allow ]; then
    l_info="$(stat -Lc 'Access: (%a/%A) Owner: (%U) Group: (%G)' /etc/cron.allow 2>/dev/null)"
    l_mode="$(stat -Lc '%a' /etc/cron.allow 2>/dev/null)"
    l_owner="$(stat -Lc '%U' /etc/cron.allow 2>/dev/null)"
@@ -3313,28 +3310,46 @@ fi
       { [ "$l_group" != "root" ] && [ "$l_group" != "crontab" ]; }; then
     l_output2="$l_output2 /etc/cron.allow is not compliant: $l_info."
    else
-    l_output="$l_output /etc/cron.allow: $l_info."
+    l_output="$l_output /etc/cron.allow is compliant: $l_info."
    fi
-  fi
 
-  # /etc/cron.deny: must not exist OR, if present, meet the same requirements.
-  if [ -e /etc/cron.deny ]; then
-   l_info="$(stat -Lc 'Access: (%a/%A) Owner: (%U) Group: (%G)' /etc/cron.deny 2>/dev/null)"
-   l_mode="$(stat -Lc '%a' /etc/cron.deny 2>/dev/null)"
-   l_owner="$(stat -Lc '%U' /etc/cron.deny 2>/dev/null)"
-   l_group="$(stat -Lc '%G' /etc/cron.deny 2>/dev/null)"
+   # If cron.allow is present and configured correctly, check if cron.deny exists and is compliant
+   if [ -e /etc/cron.deny ]; then
+    l_info_deny="$(stat -Lc 'Access: (%a/%A) Owner: (%U) Group: (%G)' /etc/cron.deny 2>/dev/null)"
+    l_mode_deny="$(stat -Lc '%a' /etc/cron.deny 2>/dev/null)"
+    l_owner_deny="$(stat -Lc '%U' /etc/cron.deny 2>/dev/null)"
+    l_group_deny="$(stat -Lc '%G' /etc/cron.deny 2>/dev/null)"
 
-   if [ $((8#$l_mode & 0177)) -ne 0 ] || \
-      [ "$l_owner" != "root" ] || \
-      { [ "$l_group" != "root" ] && [ "$l_group" != "crontab" ]; }; then
-    l_output2="$l_output2 /etc/cron.deny is not compliant: $l_info."
-   else
-    l_output="$l_output /etc/cron.deny: $l_info."
+    if [ $((8#$l_mode_deny & 0177)) -ne 0 ] || \
+       [ "$l_owner_deny" != "root" ] || \
+       { [ "$l_group_deny" != "root" ] && [ "$l_group_deny" != "crontab" ]; }; then
+     l_output2="$l_output2 /etc/cron.deny is not compliant: $l_info_deny."
+    else
+     l_output="$l_output /etc/cron.deny is compliant: $l_info_deny."
+    fi
    fi
+
+  # Case 2: /etc/cron.allow does not exist -> /etc/cron.deny MUST exist and be compliant.
   else
-   l_output="$l_output /etc/cron.deny does not exist (compliant)."
+   if [ -e /etc/cron.deny ]; then
+    l_info="$(stat -Lc 'Access: (%a/%A) Owner: (%U) Group: (%G)' /etc/cron.deny 2>/dev/null)"
+    l_mode="$(stat -Lc '%a' /etc/cron.deny 2>/dev/null)"
+    l_owner="$(stat -Lc '%U' /etc/cron.deny 2>/dev/null)"
+    l_group="$(stat -Lc '%G' /etc/cron.deny 2>/dev/null)"
+
+    if [ $((8#$l_mode & 0177)) -ne 0 ] || \
+       [ "$l_owner" != "root" ] || \
+       { [ "$l_group" != "root" ] && [ "$l_group" != "crontab" ]; }; then
+     l_output2="$l_output2 /etc/cron.allow does not exist and /etc/cron.deny is not compliant: $l_info."
+    else
+     l_output="$l_output /etc/cron.allow does not exist; fallback to compliant /etc/cron.deny: $l_info."
+    fi
+   else
+    l_output2="$l_output2 Neither /etc/cron.allow nor /etc/cron.deny exists."
+   fi
   fi
 
+  # Final Output Routing based on compliance state
   if [ -z "$l_output2" ]; then
    echo "$l_output" >> p3
    echo "Yes" >> p4
@@ -3366,10 +3381,8 @@ fi
   echo "at package is not installed; control is not applicable." >> p3
   echo "Yes" >> p4
  else
-  # /etc/at.allow must exist and be 0640 or more restrictive, root:daemon or root:root.
-  if [ ! -e /etc/at.allow ]; then
-   l_output2="$l_output2 /etc/at.allow does not exist."
-  else
+  # Case 1: /etc/at.allow exists -> verify its permissions, owner, and group.
+  if [ -e /etc/at.allow ]; then
    l_info="$(stat -Lc 'Access: (%a/%A) Owner: (%U) Group: (%G)' /etc/at.allow 2>/dev/null)"
    l_mode="$(stat -Lc '%a' /etc/at.allow 2>/dev/null)"
    l_owner="$(stat -Lc '%U' /etc/at.allow 2>/dev/null)"
@@ -3380,28 +3393,46 @@ fi
       { [ "$l_group" != "root" ] && [ "$l_group" != "daemon" ]; }; then
     l_output2="$l_output2 /etc/at.allow is not compliant: $l_info."
    else
-    l_output="$l_output /etc/at.allow: $l_info."
+    l_output="$l_output /etc/at.allow is compliant: $l_info."
    fi
-  fi
 
-  # /etc/at.deny must not exist OR, if present, meet the same requirements.
-  if [ -e /etc/at.deny ]; then
-   l_info="$(stat -Lc 'Access: (%a/%A) Owner: (%U) Group: (%G)' /etc/at.deny 2>/dev/null)"
-   l_mode="$(stat -Lc '%a' /etc/at.deny 2>/dev/null)"
-   l_owner="$(stat -Lc '%U' /etc/at.deny 2>/dev/null)"
-   l_group="$(stat -Lc '%G' /etc/at.deny 2>/dev/null)"
+   # If at.allow is present and configured correctly, check if at.deny exists and is compliant
+   if [ -e /etc/at.deny ]; then
+    l_info_deny="$(stat -Lc 'Access: (%a/%A) Owner: (%U) Group: (%G)' /etc/at.deny 2>/dev/null)"
+    l_mode_deny="$(stat -Lc '%a' /etc/at.deny 2>/dev/null)"
+    l_owner_deny="$(stat -Lc '%U' /etc/at.deny 2>/dev/null)"
+    l_group_deny="$(stat -Lc '%G' /etc/at.deny 2>/dev/null)"
 
-   if [ $((8#$l_mode & 0177)) -ne 0 ] || \
-      [ "$l_owner" != "root" ] || \
-      { [ "$l_group" != "root" ] && [ "$l_group" != "daemon" ]; }; then
-    l_output2="$l_output2 /etc/at.deny is not compliant: $l_info."
-   else
-    l_output="$l_output /etc/at.deny: $l_info."
+    if [ $((8#$l_mode_deny & 0177)) -ne 0 ] || \
+       [ "$l_owner_deny" != "root" ] || \
+       { [ "$l_group_deny" != "root" ] && [ "$l_group_deny" != "daemon" ]; }; then
+     l_output2="$l_output2 /etc/at.deny is not compliant: $l_info_deny."
+    else
+     l_output="$l_output /etc/at.deny is compliant: $l_info_deny."
+    fi
    fi
+
+  # Case 2: /etc/at.allow does not exist -> /etc/at.deny MUST exist and be compliant.
   else
-   l_output="$l_output /etc/at.deny does not exist (compliant)."
+   if [ -e /etc/at.deny ]; then
+    l_info="$(stat -Lc 'Access: (%a/%A) Owner: (%U) Group: (%G)' /etc/at.deny 2>/dev/null)"
+    l_mode="$(stat -Lc '%a' /etc/at.deny 2>/dev/null)"
+    l_owner="$(stat -Lc '%U' /etc/at.deny 2>/dev/null)"
+    l_group="$(stat -Lc '%G' /etc/at.deny 2>/dev/null)"
+
+    if [ $((8#$l_mode & 0177)) -ne 0 ] || \
+       [ "$l_owner" != "root" ] || \
+       { [ "$l_group" != "root" ] && [ "$l_group" != "daemon" ]; }; then
+     l_output2="$l_output2 /etc/at.allow does not exist and /etc/at.deny is not compliant: $l_info."
+    else
+     l_output="$l_output /etc/at.allow does not exist; fallback to compliant /etc/at.deny: $l_info."
+    fi
+   else
+    l_output2="$l_output2 Neither /etc/at.allow nor /etc/at.deny exists."
+   fi
   fi
 
+  # Final Output Routing based on compliance state
   if [ -z "$l_output2" ]; then
    echo "$l_output" >> p3
    echo "Yes" >> p4
@@ -4969,28 +5000,35 @@ fi
 #4.4.1.1
 #Ensure iptables packages are installed.
 {
- l_output="" l_output2=""
+ l_output2=""
+ l_iptables_status=""
+ l_persistent_status=""
 
+ # Check 1: Verify iptables status
  if dpkg-query -s iptables &>/dev/null; then
-  l_output="$l_output iptables is installed."
+  l_iptables_status="iptables is installed."
  else
-  l_output2="$l_output2 iptables is not installed."
+  l_iptables_status="iptables is NOT installed."
+  l_output2="yes"
  fi
 
+ # Check 2: Verify iptables-persistent status
  if dpkg-query -s iptables-persistent &>/dev/null; then
-  l_output="$l_output iptables-persistent is installed."
+  l_persistent_status="iptables-persistent is installed."
  else
-  l_output2="$l_output2 iptables-persistent is not installed."
+  l_persistent_status="iptables-persistent is NOT installed."
+  l_output2="yes"
  fi
 
  echo "Network Configuration / Configure iptables" >> p1
  echo "Ensure iptables packages are installed." >> p2
 
+ # Always print the clear, explicit status of both packages to p3
+ echo "$l_iptables_status $l_persistent_status" >> p3
+
  if [ -z "$l_output2" ]; then
-  echo "$l_output" >> p3
   echo "Yes" >> p4
  else
-  echo "$l_output2" >> p3
   echo "No" >> p4
  fi
 
@@ -5058,32 +5096,49 @@ fi
 {
  l_output="" l_output2=""
  l_iptables="$(iptables -L 2>/dev/null)"
+ 
+ l_input_status=""
+ l_output_status=""
+ l_forward_status=""
 
- # CIS audit procedure checks INPUT, OUTPUT and FORWARD policies.
- for l_chain in INPUT OUTPUT FORWARD; do
-  if printf '%s\n' "$l_iptables" | \
-     grep -qP "^Chain $l_chain \(policy (DROP|REJECT)\)"; then
-   l_output="$l_output $l_chain chain policy is DROP/REJECT."
-  else
-   l_output2="$l_output2 $l_chain chain policy is not DROP or REJECT."
-  fi
- done
+ # 1. Verify INPUT chain policy
+ if printf '%s\n' "$l_iptables" | grep -qP "^Chain INPUT \(policy (DROP|REJECT)\)"; then
+  l_input_status="INPUT:DROP/REJECT."
+ else
+  l_input_status="INPUT:ACCEPT(Not Compliant)."
+  l_output2="yes"
+ fi
+
+ # 2. Verify OUTPUT chain policy
+ if printf '%s\n' "$l_iptables" | grep -qP "^Chain OUTPUT \(policy (DROP|REJECT)\)"; then
+  l_output_status="OUTPUT:DROP/REJECT."
+ else
+  l_output_status="OUTPUT:ACCEPT(Not Compliant)."
+  l_output2="yes"
+fi
+
+ # 3. Verify FORWARD chain policy
+ if printf '%s\n' "$l_iptables" | grep -qP "^Chain FORWARD \(policy (DROP|REJECT)\)"; then
+  l_forward_status="FORWARD:DROP/REJECT."
+ else
+  l_forward_status="FORWARD:ACCEPT(Not Compliant)."
+  l_output2="yes"
+ fi
+
+ echo "Network Configuration / Configure iptables" >> p1
+ echo "Ensure iptables default deny firewall policy." >> p2
+
+ # Always output the explicit status of all three chains to the report column
+ echo "$l_input_status $l_output_status $l_forward_status" >> p3
 
  if [ -z "$l_output2" ]; then
-  echo "Network Configuration / Configure iptables" >> p1
-  echo "Ensure iptables default deny firewall policy." >> p2
-  echo "iptables default deny policy is set correctly for INPUT, OUTPUT and FORWARD chains." >> p3
   echo "Yes" >> p4
  else
-  echo "Network Configuration / Configure iptables" >> p1
-  echo "Ensure iptables default deny firewall policy." >> p2
-  echo "$l_output2" >> p3
   echo "No" >> p4
- fi
+fi
 
  echo "4.4.2.1" >> p12
 }
-
 #4.4.2.2
 #Ensure iptables loopback traffic is configured.
 {
