@@ -6629,13 +6629,13 @@ offenders=""
 # Iterate local users with hashed passwords ($...$ in shadow)
 while IFS=: read -r user _; do
 
-  # Get last password change date
+  # Get last password change date and normalize all whitespace
   lp_line=$(chage --list "$user" 2>/dev/null \
     | grep '^Last password change' \
     | cut -d: -f2- \
-    | sed 's/^[[:space:]]*//; s/[[:space:]]\+/ /g')
+    | tr '\t' ' ' \
+    | sed 's/  */ /g; s/^[[:space:]]*//; s/[[:space:]]*$//')
 
-  # Skip if no value
   [ -z "$lp_line" ] && continue
 
   # Skip "never"
@@ -6645,18 +6645,14 @@ while IFS=: read -r user _; do
   lp_epoch=$(date -d "$lp_line" +%s 2>/dev/null || echo "")
   [ -z "$lp_epoch" ] && continue
 
-  # Current date/time
   now_epoch=$(date +%s)
 
-  # Check for future-dated password change
   if [ "$lp_epoch" -gt "$now_epoch" ] 2>/dev/null; then
     offenders+="$user:$lp_line;"
   fi
 
 done < <(awk -F: '$2~/^\$.+\$/{print $1":"$2}' /etc/shadow 2>/dev/null)
 
-
-# Generate result
 if [ -z "$offenders" ]; then
 
   echo "All users have last password change date in the past (no future-dated changes detected)" >>p3
@@ -6664,9 +6660,12 @@ if [ -z "$offenders" ]; then
 
 else
 
-  # Remove trailing semicolon and normalize whitespace
   offenders="${offenders%;}"
-  offenders=$(printf '%s' "$offenders" | sed 's/[[:space:]]\+/ /g; s/[[:space:]]*$//')
+
+  # Final protection against tabs/multiple spaces entering the CSV
+  offenders=$(printf '%s' "$offenders" \
+    | tr '\t' ' ' \
+    | sed 's/  */ /g; s/^[[:space:]]*//; s/[[:space:]]*$//')
 
   echo "Users with future-dated last password change: [$offenders]" >>p3
   echo "No" >>p4
@@ -6674,7 +6673,6 @@ else
 fi
 
 echo "5.4.1.6" >>p12
-
 #########################################################################################################
 
 # 5.4.2.1
