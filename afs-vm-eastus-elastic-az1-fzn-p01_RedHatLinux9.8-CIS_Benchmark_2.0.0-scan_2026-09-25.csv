@@ -1,5 +1,5 @@
 ACCOUNT:afs 
-ACCOUNT-BAMID:12345 
+ACCOUNT-BAMID:1234 
 CIS_Benchmark_Version: 2.0.0 
 Customisation Date: 2026-09-25 
 Scan Version: CIS_Benchmark_2.0.0
@@ -7,7 +7,7 @@ FQDN:afs-vm-eastus-elastic-az1-fzn-p01.jphjhwchgmwurgklsgogdo0e3h.bx.internal.cl
 IP-ADDRESS:192.168.0.11/26 
 OS_Name&Version: RedHatLinux9.8 
 Scan-Date: 2026-09-25
-Time-Stamp: 13:21:29
+Time-Stamp: 13:46:32
 ********************************************************
 SECTION-ID|SECTION-HEADING|SYSTEM-VALUE/PARAMETER|CURRENT-VALUE|TEST-RESULT
 1.1.1.1|Initial Setup / Configure Filesystem Kernel Modules|Ensure cramfs kernel module is not available|Mounting of cramfs filesystems is disabled|Yes
