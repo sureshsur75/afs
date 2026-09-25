@@ -6617,6 +6617,7 @@ echo "5.4.1.4" >>p12
 }
 
 #########################################################################################################
+#########################################################################################################
 # 5.4.1.6
 # Ensure all users last password change date is in the past (Automated)
 
@@ -6627,27 +6628,49 @@ offenders=""
 
 # Iterate local users with hashed passwords ($...$ in shadow)
 while IFS=: read -r user _; do
-  # Get the 'Last password change' line; skip if 'never'
-  lp_line=$(chage --list "$user" 2>/dev/null | grep '^Last password change' | cut -d: -f2- | sed 's/^[[:space:]]*//; s/[[:space:]]\+/ /g')
+
+  # Get last password change date
+  lp_line=$(chage --list "$user" 2>/dev/null \
+    | grep '^Last password change' \
+    | cut -d: -f2- \
+    | sed 's/^[[:space:]]*//; s/[[:space:]]\+/ /g')
+
+  # Skip if no value
   [ -z "$lp_line" ] && continue
+
+  # Skip "never"
   echo "$lp_line" | grep -qi 'never$' && continue
 
-  # Convert to epoch; if parse fails, skip user to avoid false positives
+  # Convert date to epoch
   lp_epoch=$(date -d "$lp_line" +%s 2>/dev/null || echo "")
   [ -z "$lp_epoch" ] && continue
 
+  # Current date/time
   now_epoch=$(date +%s)
+
+  # Check for future-dated password change
   if [ "$lp_epoch" -gt "$now_epoch" ] 2>/dev/null; then
     offenders+="$user:$lp_line;"
   fi
+
 done < <(awk -F: '$2~/^\$.+\$/{print $1":"$2}' /etc/shadow 2>/dev/null)
 
+
+# Generate result
 if [ -z "$offenders" ]; then
+
   echo "All users have last password change date in the past (no future-dated changes detected)" >>p3
   echo "Yes" >>p4
+
 else
-  echo "Users with future-dated last password change: [${offenders%;}]" >>p3
+
+  # Remove trailing semicolon and normalize whitespace
+  offenders="${offenders%;}"
+  offenders=$(printf '%s' "$offenders" | sed 's/[[:space:]]\+/ /g; s/[[:space:]]*$//')
+
+  echo "Users with future-dated last password change: [$offenders]" >>p3
   echo "No" >>p4
+
 fi
 
 echo "5.4.1.6" >>p12
