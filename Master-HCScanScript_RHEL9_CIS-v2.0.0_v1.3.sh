@@ -2907,7 +2907,7 @@ if ! $httpd_installed && ! $nginx_installed; then
     echo "Ensure web server services are not in use" >> p2
     echo "httpd and nginx packages are not installed" >> p3
     echo "Yes" >> p4
-    echo "2.2.18" >> p12
+    echo "2.1.18" >> p12
 
 else
 
@@ -6618,6 +6618,7 @@ echo "5.4.1.4" >>p12
 
 #########################################################################################################
 #########################################################################################################
+#########################################################################################################
 # 5.4.1.6
 # Ensure all users last password change date is in the past (Automated)
 
@@ -6626,32 +6627,39 @@ echo "Ensure all users last password change date is in the past" >>p2
 
 offenders=""
 
-# Iterate local users with hashed passwords ($...$ in shadow)
-while IFS=: read -r user _; do
+# Current date in days since 1970-01-01
+now_days=$(( $(date +%s) / 86400 ))
 
-  # Get last password change date and normalize all whitespace
-  lp_line=$(chage --list "$user" 2>/dev/null \
-    | grep '^Last password change' \
-    | cut -d: -f2- \
-    | tr '\t' ' ' \
-    | sed 's/  */ /g; s/^[[:space:]]*//; s/[[:space:]]*$//')
+# Check local users with password hashes
+while IFS=: read -r user password last_change _; do
 
-  [ -z "$lp_line" ] && continue
+  # Skip users without a password hash
+  case "$password" in
+    '$'* ) ;;
+    * ) continue ;;
+  esac
 
-  # Skip "never"
-  echo "$lp_line" | grep -qi 'never$' && continue
+  # Skip blank/undefined last password change
+  [ -z "$last_change" ] && continue
 
-  # Convert date to epoch
-  lp_epoch=$(date -d "$lp_line" +%s 2>/dev/null || echo "")
-  [ -z "$lp_epoch" ] && continue
+  # Last password change must be numeric
+  case "$last_change" in
+    ''|*[!0-9]*) continue ;;
+  esac
 
-  now_epoch=$(date +%s)
+  # Check if last password change is in the future
+  if [ "$last_change" -gt "$now_days" ] 2>/dev/null; then
 
-  if [ "$lp_epoch" -gt "$now_epoch" ] 2>/dev/null; then
+    # Convert shadow days to readable date
+    lp_line=$(date -d "1970-01-01 +${last_change} days" '+%b %d, %Y' 2>/dev/null)
+
+    [ -z "$lp_line" ] && lp_line="$last_change days since 1970-01-01"
+
     offenders+="$user:$lp_line;"
+
   fi
 
-done < <(awk -F: '$2~/^\$.+\$/{print $1":"$2}' /etc/shadow 2>/dev/null)
+done < /etc/shadow
 
 if [ -z "$offenders" ]; then
 
@@ -6660,19 +6668,13 @@ if [ -z "$offenders" ]; then
 
 else
 
-  offenders="${offenders%;}"
-
-  # Final protection against tabs/multiple spaces entering the CSV
-  offenders=$(printf '%s' "$offenders" \
-    | tr '\t' ' ' \
-    | sed 's/  */ /g; s/^[[:space:]]*//; s/[[:space:]]*$//')
-
-  echo "Users with future-dated last password change: [$offenders]" >>p3
+  echo "Users with future-dated last password change: [${offenders%;}]" >>p3
   echo "No" >>p4
 
 fi
 
 echo "5.4.1.6" >>p12
+
 #########################################################################################################
 
 # 5.4.2.1
