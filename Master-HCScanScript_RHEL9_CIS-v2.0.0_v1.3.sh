@@ -6628,7 +6628,7 @@ offenders=""
 # Iterate local users with hashed passwords ($...$ in shadow)
 while IFS=: read -r user _; do
   # Get the 'Last password change' line; skip if 'never'
-  lp_line=$(chage --list "$user" 2>/dev/null | grep '^Last password change' | cut -d: -f2- | sed 's/^[ \t]*//')
+  lp_line=$(chage --list "$user" 2>/dev/null | grep '^Last password change' | cut -d: -f2- | sed 's/^[[:space:]]*//; s/[[:space:]]\+/ /g')
   [ -z "$lp_line" ] && continue
   echo "$lp_line" | grep -qi 'never$' && continue
 
@@ -6643,15 +6643,14 @@ while IFS=: read -r user _; do
 done < <(awk -F: '$2~/^\$.+\$/{print $1":"$2}' /etc/shadow 2>/dev/null)
 
 if [ -z "$offenders" ]; then
-  printf "%-120s\n" "All users have last password change date in the past (no future-dated changes detected)" >>p3
+  echo "All users have last password change date in the past (no future-dated changes detected)" >>p3
   echo "Yes" >>p4
 else
-  printf "%-120s\n" "Users with future-dated last password change: [${offenders%;}]" >>p3
+  echo "Users with future-dated last password change: [${offenders%;}]" >>p3
   echo "No" >>p4
 fi
 
 echo "5.4.1.6" >>p12
-
 
 #########################################################################################################
 
