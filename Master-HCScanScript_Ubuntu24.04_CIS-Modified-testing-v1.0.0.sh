@@ -3298,8 +3298,7 @@ fi
   echo "cron package is not installed; control is not applicable." >> p3
   echo "Yes" >> p4
  else
-  # Check /etc/cron.allow
-  # Must exist and have restrictive permissions
+  # Check /etc/cron.allow (Must exist and have restrictive permissions)
   if [ ! -e /etc/cron.allow ]; then
    l_output2="$l_output2 /etc/cron.allow does not exist (Required)."
   else
@@ -3307,35 +3306,28 @@ fi
    l_mode="$(stat -Lc '%a' /etc/cron.allow 2>/dev/null)"
    l_owner="$(stat -Lc '%U' /etc/cron.allow 2>/dev/null)"
    l_group="$(stat -Lc '%G' /etc/cron.allow 2>/dev/null)"
-
-   if [ $((8#$l_mode & 0177)) -ne 0 ] || \
-      [ "$l_owner" != "root" ] || \
-      { [ "$l_group" != "root" ] && [ "$l_group" != "crontab" ]; }; then
-
+   if [ $((8#$l_mode & 0177)) -ne 0 ] || [ "$l_owner" != "root" ] || { [ "$l_group" != "root" ] && [ "$l_group" != "crontab" ]; }; then
     l_output2="$l_output2 /etc/cron.allow is not compliant: $l_info."
    else
     l_output="$l_output /etc/cron.allow is compliant: $l_info."
    fi
   fi
 
-  # Check /etc/cron.deny
-  # Must NOT exist
+  # Check /etc/cron.deny (Must NOT exist)
   if [ -e /etc/cron.deny ]; then
    l_output2="$l_output2 /etc/cron.deny exists (Should be removed for strict restriction)."
   else
    l_output="$l_output /etc/cron.deny does not exist (Compliant)."
   fi
 
-  # Report both cron.allow and cron.deny results
   if [ -z "$l_output2" ]; then
    echo "$l_output" >> p3
    echo "Yes" >> p4
   else
-   echo "$l_output $l_output2" >> p3
+   echo "$l_output2 $l_output" >> p3
    echo "No" >> p4
   fi
  fi
-
  echo "2.4.1.8" >> p12
 }
 
