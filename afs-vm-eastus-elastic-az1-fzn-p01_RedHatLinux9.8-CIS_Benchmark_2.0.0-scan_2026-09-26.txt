@@ -88,7 +88,7 @@ SECTION-ID|SECTION-HEADING|SYSTEM-VALUE/PARAMETER|CURRENT-VALUE|TEST-RESULT
 2.1.15|Services / Configure Server Services|Ensure telnet server services are not in use|package telnet-server is not installed|Yes
 2.1.16|Services / Configure Server Services|Ensure tftp server services are not in use|package tftp-server is not installed|Yes
 2.1.17|Services / Configure Server Services|Ensure web proxy server services are not in use|package squid is not installed|Yes
-2.2.18|Services / Configure Server Services|Ensure web server services are not in use|httpd and nginx packages are not installed|Yes
+2.1.18|Services / Configure Server Services|Ensure web server services are not in use|httpd and nginx packages are not installed|Yes
 2.1.19|Services / Configure Server Services|Ensure xinetd services are not in use|package xinetd is not installed|Yes
 2.1.21|Services / Configure Server Services|Ensure mail transfer agents are configured for local-only mode|Port "25" is not listening on a non-loopback network interface; Port "465" is not listening on a non-loopback network interface; Port "587" is not listening on a non-loopback network interface; |Yes
 2.2.1|Services / Configure Client Services|Ensure ftp client is not installed|ftp package is not installed|Yes
