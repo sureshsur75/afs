@@ -3284,21 +3284,16 @@ fi
 {
  l_output="" l_output2=""
  l_cron_installed="no"
-
- # CIS conditional: perform the file audit only when cron is installed.
  if dpkg-query -W -f='${Status}' cron 2>/dev/null | grep -q "ok installed" || \
     command -v crontab >/dev/null 2>&1; then
   l_cron_installed="yes"
  fi
-
  echo "Services / Job Schedulers" >> p1
  echo "Ensure crontab is restricted to authorized users" >> p2
-
  if [ "$l_cron_installed" != "yes" ]; then
   echo "cron package is not installed; control is not applicable." >> p3
   echo "Yes" >> p4
  else
-  # Check /etc/cron.allow (Must exist and have restrictive permissions)
   if [ ! -e /etc/cron.allow ]; then
    l_output2="$l_output2 /etc/cron.allow does not exist (Required)."
   else
@@ -3312,14 +3307,11 @@ fi
     l_output="$l_output /etc/cron.allow is compliant: $l_info."
    fi
   fi
-
-  # Check /etc/cron.deny (Must NOT exist)
   if [ -e /etc/cron.deny ]; then
-   l_output2="$l_output2 /etc/cron.deny exists (Should be removed for strict restriction)."
+   l_output2="$l_output2 /etc/cron.deny exists (Should be removed)."
   else
    l_output="$l_output /etc/cron.deny does not exist (Compliant)."
   fi
-
   if [ -z "$l_output2" ]; then
    echo "$l_output" >> p3
    echo "Yes" >> p4
@@ -3331,7 +3323,6 @@ fi
  echo "2.4.1.8" >> p12
 }
 
-################################################################################################################
 #2.4.2.1
 #Ensure at is restricted to authorized users (Automated)
 {
@@ -4939,21 +4930,23 @@ fi
 #Ensure iptables packages are installed.
 {
  l_output="" l_output2=""
-
- # CIS audit base: verifies that the primary iptables utility package is installed.
  if dpkg-query -s iptables &>/dev/null; then
-  l_output="iptables base utility package is installed."
+  l_output="$l_output iptables package is installed."
  else
-  l_output2="iptables package is not installed."
+  l_output2="$l_output2 iptables package is not installed."
  fi
-
+ if dpkg-query -s iptables-persistent &>/dev/null; then
+  l_output="$l_output iptables-persistent package is installed."
+ else
+  l_output2="$l_output2 iptables-persistent package is not installed."
+ fi
  echo "Network Configuration / Configure iptables" >> p1
  echo "Ensure iptables packages are installed." >> p2
  if [ -z "$l_output2" ]; then
   echo "$l_output" >> p3
   echo "Yes" >> p4
  else
-  echo "$l_output2" >> p3
+  echo "$l_output2 $l_output" >> p3
   echo "No" >> p4
  fi
  echo "4.4.1.1" >> p12
@@ -5020,8 +5013,6 @@ fi
 {
  l_output="" l_output2=""
  l_iptables="$(iptables -L 2>/dev/null)"
-
- # CIS audit procedure explicitly checks INPUT, OUTPUT and FORWARD chain policies.
  for l_chain in INPUT OUTPUT FORWARD; do
   if printf '%s\n' "$l_iptables" | grep -qP "^Chain $l_chain \(policy (DROP|REJECT)\)"; then
    l_output="$l_output $l_chain chain policy is DROP/REJECT."
@@ -5029,14 +5020,12 @@ fi
    l_output2="$l_output2 $l_chain chain policy is not DROP or REJECT."
   fi
  done
-
  echo "Network Configuration / Configure iptables" >> p1
  echo "Ensure iptables default deny firewall policy." >> p2
+ echo "$l_output2 $l_output" >> p3
  if [ -z "$l_output2" ]; then
-  echo "$l_output" >> p3
   echo "Yes" >> p4
  else
-  echo "$l_output2" >> p3
   echo "No" >> p4
  fi
  echo "4.4.2.1" >> p12
