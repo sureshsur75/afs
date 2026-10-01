@@ -3489,100 +3489,83 @@ else
     fi
 fi
 
-# Report each file on its own line (one file and its configuration per line)
-# --- /etc/cron.allow (must exist and be correctly configured) ---
-case "$allow_status" in
-  correct)
-    allow_result="Yes"
-    allow_msg="/etc/cron.allow exists and is correctly configured (perm: $allow_perm, owner: $allow_owner, group: $allow_group)" ;;
-  incorrect)
-    allow_result="No"
-    allow_msg="/etc/cron.allow permissions or ownership are incorrect (perm: $allow_perm, owner: $allow_owner, group: $allow_group)" ;;
-  *)
-    allow_result="No"
-    allow_msg="/etc/cron.allow file is missing" ;;
-esac
-echo "Scheduled Jobs" >> p1
-echo "Ensure crontab is restricted to authorized users" >> p2
-echo "$allow_msg" >> p3
-echo "$allow_result" >> p4
-echo "2.4.1.8" >> p12
+# Evaluate CIS requirement
+if [ "$allow_status" = "missing" ] && [ "$deny_status" = "missing" ]; then
+    result="No"
+    msg="/etc/cron.allow and /etc/cron.deny files are missing"
+elif [ "$allow_status" = "missing" ]; then
+    result="No"
+    msg="/etc/cron.allow file is missing"
+elif [ "$allow_status" = "incorrect" ] && [ "$deny_status" = "incorrect" ]; then
+    result="No"
+    msg="/etc/cron.allow and /etc/cron.deny permissions or ownership are incorrect"
+elif [ "$allow_status" = "incorrect" ]; then
+    result="No"
+    msg="/etc/cron.allow permissions or ownership are incorrect"
+elif [ "$deny_status" = "incorrect" ]; then
+    result="No"
+    msg="/etc/cron.deny permissions or ownership are incorrect"
+else
+    result="Yes"
+    msg="/etc/cron.allow is correctly configured and /etc/cron.deny is correctly configured or not present"
+fi
 
-# --- /etc/cron.deny (optional; if present it must be correctly configured) ---
-case "$deny_status" in
-  correct)
-    deny_result="Yes"
-    deny_msg="/etc/cron.deny exists and is correctly configured (perm: $deny_perm, owner: $deny_owner, group: $deny_group)" ;;
-  incorrect)
-    deny_result="No"
-    deny_msg="/etc/cron.deny permissions or ownership are incorrect (perm: $deny_perm, owner: $deny_owner, group: $deny_group)" ;;
-  *)
-    deny_result="Yes"
-    deny_msg="/etc/cron.deny file is not present" ;;
-esac
 echo "Scheduled Jobs" >> p1
 echo "Ensure crontab is restricted to authorized users" >> p2
-echo "$deny_msg" >> p3
-echo "$deny_result" >> p4
+echo "$msg" >> p3
+echo "$result" >> p4
 echo "2.4.1.8" >> p12
 
 #########################################################################################################
 
 # 2.4.2.1
 # Ensure at is restricted to authorized users (Automated)
-# Output: one line per file (/etc/at.allow and /etc/at.deny)
+
+echo "Services / Job Schedulers" >> p1
+echo "Ensure at is restricted to authorized users" >> p2
 
 # Check if 'at' is installed
 if ! command -v at >/dev/null 2>&1 && ! systemctl list-unit-files 2>/dev/null | grep -q '^atd\.service'; then
-  for atf in /etc/at.allow /etc/at.deny; do
-    echo "Services / Job Schedulers" >> p1
-    echo "Ensure at is restricted to authorized users" >> p2
-    echo "$atf - at is not installed on the system" >> p3
-    echo "No" >> p4
-    echo "2.4.2.1" >> p12
-  done
+  echo "at is not installed on the system" >> p3
+  echo "No" >> p4
+  echo "2.4.2.1" >> p12
 else
-  # --- /etc/at.allow (must exist and be correctly configured) ---
+  # Check /etc/at.allow
   if [ -f /etc/at.allow ]; then
     # get: mode owner group
-    read -r a_mode a_owner a_group < <(stat -Lc '%a %U %G' /etc/at.allow 2>/dev/null)
-    m=$((10#${a_mode: -3}))  # normalize
-    if [ "$m" -le 640 ] && [ "$a_owner" = "root" ] && { [ "$a_group" = "root" ] || [ "$a_group" = "daemon" ]; }; then
-      at_allow_result="Yes"
-      at_allow_msg="/etc/at.allow exists and is correctly configured (perm: $a_mode, owner: $a_owner, group: $a_group)"
+    read -r mode owner group < <(stat -Lc '%a %U %G' /etc/at.allow 2>/dev/null)
+    m=$((10#${mode: -3}))  # normalize
+    if [ "$m" -le 640 ] && [ "$owner" = "root" ] && { [ "$group" = "root" ] || [ "$group" = "daemon" ]; }; then
+      allow_ok="yes"
     else
-      at_allow_result="No"
-      at_allow_msg="/etc/at.allow permissions or ownership are incorrect (perm: $a_mode, owner: $a_owner, group: $a_group)"
+      allow_ok="no"
     fi
   else
-    at_allow_result="No"
-    at_allow_msg="/etc/at.allow file is missing"
+    allow_ok="no"
   fi
-  echo "Services / Job Schedulers" >> p1
-  echo "Ensure at is restricted to authorized users" >> p2
-  echo "$at_allow_msg" >> p3
-  echo "$at_allow_result" >> p4
-  echo "2.4.2.1" >> p12
 
-  # --- /etc/at.deny (optional; if present it must be correctly configured) ---
+  # Check /etc/at.deny (optional)
   if [ ! -f /etc/at.deny ]; then
-    at_deny_result="Yes"
-    at_deny_msg="/etc/at.deny file is not present"
+    deny_ok="yes"
   else
-    read -r d_mode d_owner d_group < <(stat -Lc '%a %U %G' /etc/at.deny 2>/dev/null)
-    m=$((10#${d_mode: -3}))
-    if [ "$m" -le 640 ] && [ "$d_owner" = "root" ] && { [ "$d_group" = "root" ] || [ "$d_group" = "daemon" ]; }; then
-      at_deny_result="Yes"
-      at_deny_msg="/etc/at.deny exists and is correctly configured (perm: $d_mode, owner: $d_owner, group: $d_group)"
+    read -r mode owner group < <(stat -Lc '%a %U %G' /etc/at.deny 2>/dev/null)
+    m=$((10#${mode: -3}))
+    if [ "$m" -le 640 ] && [ "$owner" = "root" ] && { [ "$group" = "root" ] || [ "$group" = "daemon" ]; }; then
+      deny_ok="yes"
     else
-      at_deny_result="No"
-      at_deny_msg="/etc/at.deny permissions or ownership are incorrect (perm: $d_mode, owner: $d_owner, group: $d_group)"
+      deny_ok="no"
     fi
   fi
-  echo "Services / Job Schedulers" >> p1
-  echo "Ensure at is restricted to authorized users" >> p2
-  echo "$at_deny_msg" >> p3
-  echo "$at_deny_result" >> p4
+
+  # Final result:
+  if [ "$allow_ok" = "yes" ] && [ "$deny_ok" = "yes" ]; then
+    echo "at.allow and at.deny permissions/ownership compliant" >> p3
+    echo "Yes" >> p4
+  else
+    echo "at.allow/at.deny permissions or ownership NOT compliant" >> p3
+    echo "No" >> p4
+  fi
+
   echo "2.4.2.1" >> p12
 fi
 
@@ -4958,61 +4941,6 @@ else
     echo "4.3.4" >> p12
   fi
 fi
-#########################################################################################################
-
-# 4.4.1.1
-# Ensure iptables packages are installed (Automated)
-# Output: one line per package (iptables and iptables-persistent)
-
-for ipt_pkg in iptables iptables-persistent; do
-  echo "Host Based Firewall / Configure IPTables" >> p1
-  echo "Ensure iptables packages are installed" >> p2
-  if ipt_ver=$(rpm -q "$ipt_pkg" 2>/dev/null); then
-    echo "$ipt_pkg package is installed ($ipt_ver)" >> p3
-    echo "Yes" >> p4
-  else
-    echo "$ipt_pkg package is not installed" >> p3
-    echo "No" >> p4
-  fi
-  echo "4.4.1.1" >> p12
-done
-
-#########################################################################################################
-
-# 4.4.2.1
-# Ensure iptables default deny firewall policy (Automated)
-# Output: one line per chain (INPUT, OUTPUT and FORWARD) with its configured policy
-
-ipt_rules=""
-ipt_avail="no"
-if command -v iptables >/dev/null 2>&1; then
-  if ipt_rules=$(iptables -S 2>/dev/null); then
-    ipt_avail="yes"
-  fi
-fi
-
-for ipt_chain in INPUT OUTPUT FORWARD; do
-  echo "Host Based Firewall / Configure IPTables" >> p1
-  echo "Ensure iptables default deny firewall policy" >> p2
-  if [ "$ipt_avail" = "yes" ]; then
-    ipt_policy=$(printf '%s\n' "$ipt_rules" | awk -v c="$ipt_chain" '$1=="-P" && $2==c {print $3}')
-    if [ -z "$ipt_policy" ]; then
-      echo "$ipt_chain chain policy: not configured" >> p3
-      echo "No" >> p4
-    elif [ "$ipt_policy" = "DROP" ] || [ "$ipt_policy" = "REJECT" ]; then
-      echo "$ipt_chain chain policy: $ipt_policy" >> p3
-      echo "Yes" >> p4
-    else
-      echo "$ipt_chain chain policy: $ipt_policy (expected DROP or REJECT)" >> p3
-      echo "No" >> p4
-    fi
-  else
-    echo "$ipt_chain chain policy: unable to read (iptables not installed or not accessible)" >> p3
-    echo "No" >> p4
-  fi
-  echo "4.4.2.1" >> p12
-done
-
 #######################################Access Control / Configure SSH Server#`############################
 
 #5.1.1
