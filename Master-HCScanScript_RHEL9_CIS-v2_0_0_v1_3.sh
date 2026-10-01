@@ -2907,7 +2907,7 @@ if ! $httpd_installed && ! $nginx_installed; then
     echo "Ensure web server services are not in use" >> p2
     echo "httpd and nginx packages are not installed" >> p3
     echo "Yes" >> p4
-    echo "2.2.18" >> p12
+    echo "2.1.18" >> p12
 
 else
 
@@ -3489,83 +3489,100 @@ else
     fi
 fi
 
-# Evaluate CIS requirement
-if [ "$allow_status" = "missing" ] && [ "$deny_status" = "missing" ]; then
-    result="No"
-    msg="/etc/cron.allow and /etc/cron.deny files are missing"
-elif [ "$allow_status" = "missing" ]; then
-    result="No"
-    msg="/etc/cron.allow file is missing"
-elif [ "$allow_status" = "incorrect" ] && [ "$deny_status" = "incorrect" ]; then
-    result="No"
-    msg="/etc/cron.allow and /etc/cron.deny permissions or ownership are incorrect"
-elif [ "$allow_status" = "incorrect" ]; then
-    result="No"
-    msg="/etc/cron.allow permissions or ownership are incorrect"
-elif [ "$deny_status" = "incorrect" ]; then
-    result="No"
-    msg="/etc/cron.deny permissions or ownership are incorrect"
-else
-    result="Yes"
-    msg="/etc/cron.allow is correctly configured and /etc/cron.deny is correctly configured or not present"
-fi
-
+# Report each file on its own line (one file and its configuration per line)
+# --- /etc/cron.allow (must exist and be correctly configured) ---
+case "$allow_status" in
+  correct)
+    allow_result="Yes"
+    allow_msg="/etc/cron.allow exists and is correctly configured (perm: $allow_perm, owner: $allow_owner, group: $allow_group)" ;;
+  incorrect)
+    allow_result="No"
+    allow_msg="/etc/cron.allow permissions or ownership are incorrect (perm: $allow_perm, owner: $allow_owner, group: $allow_group)" ;;
+  *)
+    allow_result="No"
+    allow_msg="/etc/cron.allow file is missing" ;;
+esac
 echo "Scheduled Jobs" >> p1
 echo "Ensure crontab is restricted to authorized users" >> p2
-echo "$msg" >> p3
-echo "$result" >> p4
+echo "$allow_msg" >> p3
+echo "$allow_result" >> p4
+echo "2.4.1.8" >> p12
+
+# --- /etc/cron.deny (optional; if present it must be correctly configured) ---
+case "$deny_status" in
+  correct)
+    deny_result="Yes"
+    deny_msg="/etc/cron.deny exists and is correctly configured (perm: $deny_perm, owner: $deny_owner, group: $deny_group)" ;;
+  incorrect)
+    deny_result="No"
+    deny_msg="/etc/cron.deny permissions or ownership are incorrect (perm: $deny_perm, owner: $deny_owner, group: $deny_group)" ;;
+  *)
+    deny_result="Yes"
+    deny_msg="/etc/cron.deny file is not present" ;;
+esac
+echo "Scheduled Jobs" >> p1
+echo "Ensure crontab is restricted to authorized users" >> p2
+echo "$deny_msg" >> p3
+echo "$deny_result" >> p4
 echo "2.4.1.8" >> p12
 
 #########################################################################################################
 
 # 2.4.2.1
 # Ensure at is restricted to authorized users (Automated)
-
-echo "Services / Job Schedulers" >> p1
-echo "Ensure at is restricted to authorized users" >> p2
+# Output: one line per file (/etc/at.allow and /etc/at.deny)
 
 # Check if 'at' is installed
 if ! command -v at >/dev/null 2>&1 && ! systemctl list-unit-files 2>/dev/null | grep -q '^atd\.service'; then
-  echo "at is not installed on the system" >> p3
-  echo "No" >> p4
-  echo "2.4.2.1" >> p12
+  for atf in /etc/at.allow /etc/at.deny; do
+    echo "Services / Job Schedulers" >> p1
+    echo "Ensure at is restricted to authorized users" >> p2
+    echo "$atf - at is not installed on the system" >> p3
+    echo "No" >> p4
+    echo "2.4.2.1" >> p12
+  done
 else
-  # Check /etc/at.allow
+  # --- /etc/at.allow (must exist and be correctly configured) ---
   if [ -f /etc/at.allow ]; then
     # get: mode owner group
-    read -r mode owner group < <(stat -Lc '%a %U %G' /etc/at.allow 2>/dev/null)
-    m=$((10#${mode: -3}))  # normalize
-    if [ "$m" -le 640 ] && [ "$owner" = "root" ] && { [ "$group" = "root" ] || [ "$group" = "daemon" ]; }; then
-      allow_ok="yes"
+    read -r a_mode a_owner a_group < <(stat -Lc '%a %U %G' /etc/at.allow 2>/dev/null)
+    m=$((10#${a_mode: -3}))  # normalize
+    if [ "$m" -le 640 ] && [ "$a_owner" = "root" ] && { [ "$a_group" = "root" ] || [ "$a_group" = "daemon" ]; }; then
+      at_allow_result="Yes"
+      at_allow_msg="/etc/at.allow exists and is correctly configured (perm: $a_mode, owner: $a_owner, group: $a_group)"
     else
-      allow_ok="no"
+      at_allow_result="No"
+      at_allow_msg="/etc/at.allow permissions or ownership are incorrect (perm: $a_mode, owner: $a_owner, group: $a_group)"
     fi
   else
-    allow_ok="no"
+    at_allow_result="No"
+    at_allow_msg="/etc/at.allow file is missing"
   fi
+  echo "Services / Job Schedulers" >> p1
+  echo "Ensure at is restricted to authorized users" >> p2
+  echo "$at_allow_msg" >> p3
+  echo "$at_allow_result" >> p4
+  echo "2.4.2.1" >> p12
 
-  # Check /etc/at.deny (optional)
+  # --- /etc/at.deny (optional; if present it must be correctly configured) ---
   if [ ! -f /etc/at.deny ]; then
-    deny_ok="yes"
+    at_deny_result="Yes"
+    at_deny_msg="/etc/at.deny file is not present"
   else
-    read -r mode owner group < <(stat -Lc '%a %U %G' /etc/at.deny 2>/dev/null)
-    m=$((10#${mode: -3}))
-    if [ "$m" -le 640 ] && [ "$owner" = "root" ] && { [ "$group" = "root" ] || [ "$group" = "daemon" ]; }; then
-      deny_ok="yes"
+    read -r d_mode d_owner d_group < <(stat -Lc '%a %U %G' /etc/at.deny 2>/dev/null)
+    m=$((10#${d_mode: -3}))
+    if [ "$m" -le 640 ] && [ "$d_owner" = "root" ] && { [ "$d_group" = "root" ] || [ "$d_group" = "daemon" ]; }; then
+      at_deny_result="Yes"
+      at_deny_msg="/etc/at.deny exists and is correctly configured (perm: $d_mode, owner: $d_owner, group: $d_group)"
     else
-      deny_ok="no"
+      at_deny_result="No"
+      at_deny_msg="/etc/at.deny permissions or ownership are incorrect (perm: $d_mode, owner: $d_owner, group: $d_group)"
     fi
   fi
-
-  # Final result:
-  if [ "$allow_ok" = "yes" ] && [ "$deny_ok" = "yes" ]; then
-    echo "at.allow and at.deny permissions/ownership compliant" >> p3
-    echo "Yes" >> p4
-  else
-    echo "at.allow/at.deny permissions or ownership NOT compliant" >> p3
-    echo "No" >> p4
-  fi
-
+  echo "Services / Job Schedulers" >> p1
+  echo "Ensure at is restricted to authorized users" >> p2
+  echo "$at_deny_msg" >> p3
+  echo "$at_deny_result" >> p4
   echo "2.4.2.1" >> p12
 fi
 
@@ -4941,6 +4958,61 @@ else
     echo "4.3.4" >> p12
   fi
 fi
+#########################################################################################################
+
+# 4.4.1.1
+# Ensure iptables packages are installed (Automated)
+# Output: one line per package (iptables and iptables-persistent)
+
+for ipt_pkg in iptables iptables-persistent; do
+  echo "Host Based Firewall / Configure IPTables" >> p1
+  echo "Ensure iptables packages are installed" >> p2
+  if ipt_ver=$(rpm -q "$ipt_pkg" 2>/dev/null); then
+    echo "$ipt_pkg package is installed ($ipt_ver)" >> p3
+    echo "Yes" >> p4
+  else
+    echo "$ipt_pkg package is not installed" >> p3
+    echo "No" >> p4
+  fi
+  echo "4.4.1.1" >> p12
+done
+
+#########################################################################################################
+
+# 4.4.2.1
+# Ensure iptables default deny firewall policy (Automated)
+# Output: one line per chain (INPUT, OUTPUT and FORWARD) with its configured policy
+
+ipt_rules=""
+ipt_avail="no"
+if command -v iptables >/dev/null 2>&1; then
+  if ipt_rules=$(iptables -S 2>/dev/null); then
+    ipt_avail="yes"
+  fi
+fi
+
+for ipt_chain in INPUT OUTPUT FORWARD; do
+  echo "Host Based Firewall / Configure IPTables" >> p1
+  echo "Ensure iptables default deny firewall policy" >> p2
+  if [ "$ipt_avail" = "yes" ]; then
+    ipt_policy=$(printf '%s\n' "$ipt_rules" | awk -v c="$ipt_chain" '$1=="-P" && $2==c {print $3}')
+    if [ -z "$ipt_policy" ]; then
+      echo "$ipt_chain chain policy: not configured" >> p3
+      echo "No" >> p4
+    elif [ "$ipt_policy" = "DROP" ] || [ "$ipt_policy" = "REJECT" ]; then
+      echo "$ipt_chain chain policy: $ipt_policy" >> p3
+      echo "Yes" >> p4
+    else
+      echo "$ipt_chain chain policy: $ipt_policy (expected DROP or REJECT)" >> p3
+      echo "No" >> p4
+    fi
+  else
+    echo "$ipt_chain chain policy: unable to read (iptables not installed or not accessible)" >> p3
+    echo "No" >> p4
+  fi
+  echo "4.4.2.1" >> p12
+done
+
 #######################################Access Control / Configure SSH Server#`############################
 
 #5.1.1
@@ -6617,7 +6689,8 @@ echo "5.4.1.4" >>p12
 }
 
 #########################################################################################################
-
+#########################################################################################################
+#########################################################################################################
 # 5.4.1.6
 # Ensure all users last password change date is in the past (Automated)
 
@@ -6626,32 +6699,50 @@ echo "Ensure all users last password change date is in the past" >>p2
 
 offenders=""
 
-# Iterate local users with hashed passwords ($...$ in shadow)
-while IFS=: read -r user _; do
-  # Get the 'Last password change' line; skip if 'never'
-  lp_line=$(chage --list "$user" 2>/dev/null | grep '^Last password change' | cut -d: -f2- | sed 's/^[ \t]*//')
-  [ -z "$lp_line" ] && continue
-  echo "$lp_line" | grep -qi 'never$' && continue
+# Current date in days since 1970-01-01
+now_days=$(( $(date +%s) / 86400 ))
 
-  # Convert to epoch; if parse fails, skip user to avoid false positives
-  lp_epoch=$(date -d "$lp_line" +%s 2>/dev/null || echo "")
-  [ -z "$lp_epoch" ] && continue
+# Check local users with password hashes
+while IFS=: read -r user password last_change _; do
 
-  now_epoch=$(date +%s)
-  if [ "$lp_epoch" -gt "$now_epoch" ] 2>/dev/null; then
+  # Skip users without a password hash
+  case "$password" in
+    '$'* ) ;;
+    * ) continue ;;
+  esac
+
+  # Skip blank/undefined last password change
+  [ -z "$last_change" ] && continue
+
+  # Last password change must be numeric
+  case "$last_change" in
+    ''|*[!0-9]*) continue ;;
+  esac
+
+  # Check if last password change is in the future
+  if [ "$last_change" -gt "$now_days" ] 2>/dev/null; then
+
+    # Convert shadow days to readable date
+    lp_line=$(date -d "1970-01-01 +${last_change} days" '+%b %d %Y' 2>/dev/null)
+
+    [ -z "$lp_line" ] && lp_line="$last_change days since 1970-01-01"
+
     offenders+="$user:$lp_line;"
+
   fi
-done < <(awk -F: '$2~/^\$.+\$/{print $1":"$2}' /etc/shadow 2>/dev/null)
+
+done < /etc/shadow
 
 if [ -z "$offenders" ]; then
+
   echo "All users have last password change date in the past (no future-dated changes detected)" >>p3
   echo "Yes" >>p4
+
 else
-  # Keep the complete result in one CSV field.
-  # Remove pipe/newline characters so they cannot shift the report columns.
-  offenders_clean=$(printf '%s' "${offenders%;}" | tr '|\r\n' '   ')
-  echo "Users with future-dated last password change: [$offenders_clean]" >>p3
+
+  echo "Users with future-dated last password change: [${offenders%;}]" >>p3
   echo "No" >>p4
+
 fi
 
 echo "5.4.1.6" >>p12
@@ -7448,53 +7539,62 @@ echo "Ensure access to all logfiles has been configured" >>p2
 issues=""
 
 # Loop over all /var/log files
-# Use NUL-delimited input so filenames containing spaces/newlines are handled safely.
 while IFS= read -r -d '' f; do
     [ ! -f "$f" ] && continue
+
+    # Printable copy of the name with any newline removed, so each file stays on one report line
+    fclean="${f//$'\n'/ }"
+    fclean="${fclean//$'\r'/ }"
 
     base=$(basename "$f")
     mode=$(stat -c "%a" "$f")
     user=$(stat -c "%U" "$f")
     group=$(stat -c "%G" "$f")
 
-    # Keep each filename on one CSV field and prevent delimiter/newline characters
-    # from creating additional columns or rows in the final report.
-    safe_f=$(printf '%s' "$f" | tr '|\r\n' '   ')
-
     case "$base" in
         lastlog|lastlog.*|wtmp|wtmp.*|wtmp-*|btmp|btmp.*|btmp-*)
             # 0664 or stricter; owner=root; group=root/utmp
             if [ "$mode" -gt 664 ] || [ "$user" != "root" ] || [[ ! "$group" =~ ^(root|utmp)$ ]]; then
-                issues+="$safe_f;"
+                issues+="$fclean;"
             fi
             ;;
         secure|auth.log|syslog|messages|*.journal|*.journal~)
             # 0640 or stricter; owner=root/syslog; group=root/adm
             if [ "$mode" -gt 640 ] || [[ ! "$user" =~ ^(root|syslog)$ ]] || [[ ! "$group" =~ ^(root|adm)$ ]]; then
-                issues+="$safe_f;"
+                issues+="$fclean;"
             fi
             ;;
         gdm|gdm3|SSSD|sssd)
             # 0660 or stricter; owner=root/SSSD; group root/SSSD/gdm/gdm3
             if [ "$mode" -gt 660 ] || [[ ! "$user" =~ ^(root|SSSD)$ ]] || [[ ! "$group" =~ ^(root|SSSD|gdm|gdm3)$ ]]; then
-                issues+="$safe_f;"
+                issues+="$fclean;"
             fi
             ;;
         *)
             # Default: 0640 or stricter; owner root/syslog; group root/adm
             if [ "$mode" -gt 640 ] || [[ ! "$user" =~ ^(root|syslog)$ ]] || [[ ! "$group" =~ ^(root|adm)$ ]]; then
-                issues+="$safe_f;"
+                issues+="$fclean;"
             fi
             ;;
     esac
 done < <(find /var/log -type f -print0)
 
+# Excel/CSV viewers cut a cell at 32767 characters and push the rest onto the next row,
+# so cap the list well below that and report how many files were left out.
+max_len=30000
+if [ "${#issues}" -gt "$max_len" ]; then
+    total_issues=$(printf '%s' "$issues" | tr -cd ';' | wc -c)
+    trimmed="${issues:0:$max_len}"
+    trimmed="${trimmed%;*};"
+    shown_issues=$(printf '%s' "$trimmed" | tr -cd ';' | wc -c)
+    issues="${trimmed} ...[list truncated: ${shown_issues} of ${total_issues} files shown]"
+fi
+
 if [ -z "$issues" ]; then
     echo "All /var/log files have correct permissions & ownership" >>p3
     echo "Yes" >>p4
 else
-    # Keep the complete result in one CSV field.
-    echo "Files with incorrect access: ${issues}" | tr '\r\n' ' ' >>p3
+    echo "Files with incorrect access: ${issues}" >>p3
     echo "No" >>p4
 fi
 
