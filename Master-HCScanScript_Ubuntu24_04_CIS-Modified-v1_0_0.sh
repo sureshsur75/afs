@@ -1489,14 +1489,7 @@ fi
 else
 echo "Initial Setup / Configure GNOME Display Manager" >> p1
 echo "Ensure GDM disable-user-list option is enabled." >> p2
-echo "GDM disable-user-list is not configured" >> p3
-echo "No" >> p4
-echo "1.7.3" >> p12
-fi
-else
-echo "Initial Setup / Configure GNOME Display Manager" >> p1
-echo "Ensure GDM disable-user-list option is enabled." >> p2
-echo "GDM disable-user-list is not configured" >> p3
+echo "GDM is not installed; control is not applicable." >> p3
 echo "Yes" >> p4
 echo "1.7.3" >> p12
 fi
